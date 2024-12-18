@@ -4,14 +4,15 @@ from __future__ import print_function
 
 __all__ = ["HTMLView"]
 
-from WebKit import WebView
+
 from vanilla.vanillaBase import VanillaBaseObject
+
 
 class HTMLView(VanillaBaseObject):
 	"""
 	A view that allows for showing HTML
-	
-	from vanilla import *
+
+	from vanilla import FloatingWindow
 	from objectsGS import HTMLView
 	class HTMLViewDemo(object):
 		def __init__(self):
@@ -24,10 +25,13 @@ class HTMLView(VanillaBaseObject):
 
 	**posSize** Tuple of form *(left, top, width, height)* representing the position and size of the color well.
 	"""
+	from WebKit import WebView
 	nsHTMLViewClass = WebView
+
 	def __init__(self, posSize):
 		self._setupView(self.nsHTMLViewClass, posSize)
-		#self._nsObject.setDelegate_(self)
+		# self._nsObject.setDelegate_(self)
+
 	def setHTMLPath(self, path):
 		if (path):
 			self._nsObject.setMainFrameURL_(path)
