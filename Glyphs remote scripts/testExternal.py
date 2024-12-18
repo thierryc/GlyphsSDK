@@ -67,7 +67,7 @@ def classTeste():
 
 def runScriptInsideGlyphs():
 	code = "print(Layer)"
-	if Glyphs.versionString < "3.1":
+	if Glyphs.versionString() < "3.1":
 		# the print output will be in the Glyphs console. Maybe set "Use system console for script output" in Preferences > Addons
 		macroViewController = Glyphs.objectWithClassName_("GSMacroViewController")
 		macroViewController.runMacroString_(code)
