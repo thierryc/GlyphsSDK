@@ -23,7 +23,7 @@ These variables will need to be replaced by you:
 For the plug-in name, we are dealing with two different name variations:
 
 * `____PluginName____` is a human readable name that will show up in places such as the *Plugins* tab of Glyphs’ preferences window. This name may contain spaces and Unicode characters.
-* `____PluginClassName____` is the machine readable name of the Python class in your code and needs to be put into a few places. It needs to be unique, as in: You can’t install two plug-ins next to each other that have the same class name. Although I wrote "machine readable", there is one interaction where the user of the plug-in will get to see this class name: Calling Filters through Custom Parameters upon file export. So make it a friendly and unique name. Only ASCII characters and no spaces allowed here. We recommend `camelCaseNames`.
+* `____PluginClassName____` is the machine readable name of the Python class in your code and needs to be put into a few places. It needs to be unique, as in: You can’t install two plug-ins next to each other that have the same class name. Although I wrote "machine readable", there is one interaction where the user of the plug-in will get to see this class name: Calling Filters through Custom Parameters upon file export. So make it a friendly and unique name. Only ASCII characters and no spaces allowed here. We recommend `PascalCaseNames`.
 
 #### Other meta data
 
