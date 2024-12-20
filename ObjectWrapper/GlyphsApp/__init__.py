@@ -3861,64 +3861,74 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 	.. autosummary::
 
-		parent
-		masters
 		axes
+		classes
+		customParameters
+		date
+		featurePrefixes
+		features
+		glyphs
+		instances
+		kerning
+		kerningLTR
+		kerningRTL
+		kerningVertical
+		masters
+		note
+		parent
 		properties
 		stems
-		instances
-		glyphs
-		classes
-		features
-		featurePrefixes
+		tempData
+		upm
+		userData
+
+		compatibleFullName
+		compatibleFullNames
 		copyright
 		copyrights
-		license
-		licenses
+		description
+		descriptions
 		designer
 		designers
 		designerURL
+		familyName
+		familyNames
+		license
+		licenses
 		manufacturer
 		manufacturers
 		manufacturerURL
-		familyNames
-		trademark
-		trademarks
 		sampleText
 		sampleTexts
-		description
-		descriptions
-		compatibleFullName
-		compatibleFullNames
+		trademark
+		trademarks
 		versionMajor
 		versionMinor
-		date
-		familyName
-		upm
-		note
-		kerning
-		userData
+
+		disablesAutomaticAlignment
+		disablesNiceNames
 		grid
-		gridSubDivision
 		gridLength
+		gridSubDivision
 		keyboardIncrement
 		keyboardIncrementBig
 		keyboardIncrementHuge
+		previewRemoveOverlap
 		snapToObjects
-		disablesNiceNames
-		customParameters
-		selection
-		selectedLayers
-		selectedFontMaster
-		masterIndex
-		currentText
-		tabs
-		fontView
+
 		currentTab
+		currentText
 		filepath
+		fontView
+		masterIndex
+		selectedFontMaster
+		selectedLayers
+		selection
+		tabs
 		tool
 		tools
-		appVersion
+
+
 
 	Functions
 
@@ -5089,9 +5099,9 @@ GSFont.save = python_method(__GSFont__save__)
 
 		If no path is given, it saves to the existing location.
 
-		:param path: Optional file path. When the font is loaded directly (`GSFont(path)`), the path argument is required.
+		:param path: (Optional) file path including filename and suffix. When the font is loaded directly (`GSFont(path)`), the path argument is required.
 		:type path: str
-		:param formatVersion: the format of the file
+		:param formatVersion: The format of the file. Requires `makeCopy=True`
 		:type formatVersion: int
 		:param makeCopy: saves a new file without changing the documents file paths. So it always need a `path` argument
 		:type makeCopy: bool
@@ -7686,26 +7696,37 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 
 	.. autosummary::
 
-		parent
-		layers
-		name
-		unicode
-		string
-		id
-		category
-		storeCategory
-		subCategory
-		storeSubCategory
 		case
 		storeCase
-		script
-		storeScript
+		category
+		storeCategory
+		color
+		colorObject
+		direction
+		storeDirection
+		export
+		font
+		glyphInfo
+		id
+		layers
+		locked
+		name
+		note
+		parent
 		productionName
 		storeProductionName
+		script
+		storeScript
+		smartComponentAxes
 		sortName
-		sortNameKeep
 		storeSortName
-		glyphInfo
+		sortNameKeep
+		subCategory
+		storeSubCategory
+		tags
+		unicode
+		userData
+
 		leftKerningGroup
 		rightKerningGroup
 		leftKerningKey
@@ -7717,15 +7738,10 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 		leftMetricsKey
 		rightMetricsKey
 		widthMetricsKey
-		export
-		color
-		colorObject
-		note
+
+		string
 		selected
 		mastersCompatible
-		userData
-		smartComponentAxes
-		tags
 		lastChange
 
 	Functions
@@ -13093,7 +13109,7 @@ This contains valuable information from the glyph database. See :class:`GSGlyphs
 		accents
 		anchors
 		unicode
-		unicode2
+		unicodes
 		script
 		index
 		sortName
@@ -13102,6 +13118,7 @@ This contains valuable information from the glyph database. See :class:`GSGlyphs
 		altNames
 		direction
 		desc
+		case
 
 	**Properties**
 '''
@@ -13175,17 +13192,17 @@ GSGlyphInfo.anchors = property(lambda self: self.pyobjc_instanceMethods.anchors(
 GSGlyphInfo.unicode = property(lambda self: self.pyobjc_instanceMethods.unicode())
 '''
 	.. attribute:: unicode
-		Unicode value
+		the first Unicode value
 
 		:type: str
 '''
 
 GSGlyphInfo.unicodes = property(lambda self: self.unicodesArray())
 '''
-	.. attribute:: unicode2
+	.. attribute:: unicodes
 		a second unicode value it present
 
-		:type: str
+		:type: list
 '''
 
 GSGlyphInfo.script = property(lambda self: self.pyobjc_instanceMethods.script())
