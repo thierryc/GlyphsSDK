@@ -30,8 +30,8 @@
 				<string>glyphsPlugin</string>
 				<key>FRAMEWORK_SEARCH_PATHS</key>
 				<string>"$(SYSTEM_APPS_DIR)/Glyphs 3.app/Contents/Frameworks"</string>
-				<key>COMBINE_HIDPI_IMAGES</key>
-				<string>YES</string>
+				<key>GCC_PREFIX_HEADER</key>
+				<string>___PACKAGENAME___/___PACKAGENAME___-Prefix.pch</string>
 			</dict>
 			<key>Configurations</key>
 			<dict>
@@ -39,15 +39,10 @@
 				<dict>
 					<key>DSTROOT</key>
 					<string>$(USER_LIBRARY_DIR)/Application Support/Glyphs 3/Plugins</string>
+					<key>SKIP_INSTALL</key>
+					<string>NO</string>
 					<key>DEPLOYMENT_LOCATION</key>
 					<string>YES</string>
-					<key>GCC_PREFIX_HEADER</key>
-					<string>___PACKAGENAME___/___PACKAGENAME___-Prefix.pch</string>
-				</dict>
-				<key>Release</key>
-				<dict>
-					<key>GCC_PREFIX_HEADER</key>
-					<string>___PACKAGENAME___/___PACKAGENAME___-Prefix.pch</string>
 				</dict>
 			</dict>
 			<key>BuildPhases</key>
