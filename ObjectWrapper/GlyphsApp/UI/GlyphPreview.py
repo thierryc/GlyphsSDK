@@ -68,7 +68,7 @@ class GlyphPreview(VanillaBaseObject):
 				self.w.Preview.mouseDoubleDownCallBack = self.mouseDoubleDown
 				self.w.open()
 			def mouseDoubleDown(self, sender):
-				print "Mouse Double Down"
+				print("Mouse Double Down")
 
 		GlyphPreviewDemo()
 
