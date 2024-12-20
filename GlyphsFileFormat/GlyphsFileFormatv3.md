@@ -276,8 +276,9 @@ The property list file contains a dictionary with the following structure.
     * sampleTexts
     * postscriptFullName
     * postscriptFontName
-    * WWSFamilyName
+    * vendorID
     * versionString
+    * WWSFamilyName
 * values `list>dict`: a list of localized values
     * language `string`: 'dflt' or three letter ISO language tag ("DEU")
     * value `string`: The value
