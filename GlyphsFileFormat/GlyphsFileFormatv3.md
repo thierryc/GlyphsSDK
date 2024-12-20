@@ -173,6 +173,7 @@ The property list file contains a dictionary with the following structure.
         * metricWidth `string`:
         * name `string`: The name of the layer. Only stored for none master layers (this is changed in 2.3, before the master names where stored)
         * partSelection `dict`: Keys are property names, values are `1` if the layer is selected for the bottom range, `2` for the top.
+        * production `string`: Production name of the glyph. If omitted, taken from glyph data.
         * shapes `list>dict`: Can be paths or components
             * path:
                 * attr: `dict`: see [Attributes](*attributes)
