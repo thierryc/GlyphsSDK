@@ -14,6 +14,19 @@ name = Uppercase;
 );
 customParameters = (
 {
+name = "Color Palettes";
+value = (
+(
+"2,202,252,255",
+"255,211,55,255"
+),
+(
+"49,106,131,255",
+"129,113,50,255"
+)
+);
+},
+{
 name = "Import Font";
 value = {
 };
