@@ -88,6 +88,7 @@ The XML file contains a dictionary with the following structure. The elements wi
     * xHeight `int`
 * glyphs `list`
     * glyphname `string`: Must be unique throughout the font.
+    * export `bool`: Always set to `1`, otherwise omit the key
     * production `string`: manually set production name (new in v2.2)
     * script `string`: manually set script (new in v2.2)
     * category `string`: manually set category (new in v2.2)
