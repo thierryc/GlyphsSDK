@@ -78,6 +78,7 @@ The XML file contains a dictionary with the following structure. The elements wi
     * horizontalStems `list`: a list of `int` values.
     * iconName `string`: stores the selected master icon (new in v2.5)
     * id `string` a unique id that connects the layers (associated ID) with the master.
+    * italicAngle `int`: italic angle in degrees. Positive is clockwise (forward slant).
     * userData `dict` to store custom data. Only `string`, `int`, `float`, `array`, `dict` and `date` data is allowed.
     * verticalStems `list`: a list of `int` values.
     * visible `int`: Always set to `1`. If not set, the key is not present at all.
