@@ -8,7 +8,7 @@ Glyphs saves its files in plaintext format. So the files can be viewed and edite
 ## Changes
 ### 1. March 2021
 - add description of .glyphspackage files
-### September – December 2020 
+### September – December 2020
 - several fixes and additions
 - add JSON schema for Glyphs 2 and 3 files
 ### 4. Jan. 2019
@@ -46,6 +46,7 @@ The bundle contains this:
 - empty elements are always omitted.
     * except: in `userData` entires. There the structure is preserved.
 - Numbers are always written without quotes (negative and float). Strings that look like numbers are written with quotes (mostly important in userData).
+- Boolean values are written as integers `0` or `1`. The entry is not present if the value is the default value for the field. Generally the default for a boolean field is false, but there are some cases noted below where the default is true.
 - Unicodes are written as int numbers.
 - The last element in a list doesn’t get a trailing comma.
 - Newlines and tabs in strings (e.g. in feature code or classes) are not escaped.
@@ -58,31 +59,31 @@ The property list file contains a dictionary with the following structure.
 * .formatVersion `int` set to `3` for version 3. If that key is missing assume version 2.
 * DisplayStrings `list>string`:
 * axes `list>dict`: The interpolation axes
-    * hidden `bool`: If the axis should be visible in the UI. Always set to `1`, otherwise omit the key
+    * hidden `bool`: If the axis should be visible in the UI. 
     * name `string`: The name of the axis (e.g. `Weight`)
     * tag `string`: The axis tag (e.g. `wght`)
 * classes `list>dict`: OpenType classes.
     * automatic `bool`: Always set to `1`. If the feature is not set to automatic, the key should be omitted.
     * code `string`: A string containing space separated glyph names.
-    * disabled `bool`: The class will not be exported. Always set to `1`, otherwise omit the key
+    * disabled `bool`: The class will not be exported. 
     * name `string`: The OpenType class name.
     * notes `string`: Notes.
 * customParameters `list>dict`: Font-wide custom parameters.
-    * disabled `bool`: The parameter will be ignored. Always set to `1`, otherwise omit the key
+    * disabled `bool`: The parameter will be ignored.
     * name `string`: Property name of the custom parameter.
     * value `string`: Value of the custom parameters.
 * date `string`: Format `2014-01-29 14:14:38 +0000`.
 * familyName `string`
 * featurePrefixes `list>dict`: OpenType feature code before the class definitions.
-    * automatic `bool`: Always set to `1`, otherwise omit the key
+    * automatic `bool`
     * code `string`: A string containing feature code.
-    * disabled `bool`: The prefix will not be exported. Always set to `1`, otherwise omit the key
+    * disabled `bool`: If true, the prefix will not be exported.
     * name `string`: The name of the prefix
     * notes `string`: Notes.
 * features `list>dict`
-    * automatic `bool`: Always set to `1`, otherwise omit the key
+    * automatic `bool`
     * code `string`: A string containing feature code.
-    * disabled `bool`: The feature will not be exported. Always set to `1`, otherwise omit the key
+    * disabled `bool`: If true, the feature will not be exported.
     * labels `list>dict`: list of stylistic set labels.
         * language `string`: 'dflt' or three letter ISO language tag ("DEU")
         * value `string`: The name
@@ -104,7 +105,7 @@ The property list file contains a dictionary with the following structure.
     * properties `list>dict`: see [Properties](#properties)
     * stemValues `list>float`: a list of floats, stem settings are stored in the font object.
     * userData `dict`: to store custom data. Only `string`, `int`, `float`, `array`, `dict` and `date` data is allowed.
-    * visible `bool`: Always set to `1`, otherwise omit the key.
+    * visible `bool`
 * glyphs `list>dict`:
     * case `string`: The 'case' if the glyph when manually set. Possible values: "noCase", "upper", "lower", "smallCaps", "other". This could be used to specify 'height' of default numbers (lining sv old style)
     * category `string`: manually set category
@@ -112,7 +113,7 @@ The property list file contains a dictionary with the following structure.
         1. If `int`, it is the index of the internal color list
         2. If `tuple`, two to five numbers in the range of 0–255 denoting a Grey+A, RGBA or CMYKA values
     * direction: The writing direction when manually set. Possible values: "BIDI", "LTR", "RTL", "VTL", "VTR".
-    * export `bool`: Always set to `0`, otherwise omit the key.
+    * export `bool`: Defaults to *true* if not present.
     * glyphname `string`: Must be unique throughout the font.
     * kernBottom `string`: Bottom kerning group
     * kernLeft `string`: Left kerning group
@@ -130,7 +131,7 @@ The property list file contains a dictionary with the following structure.
         * backgroundImage `dict`: a image.
             * angle `float`: The angle. If not set defaults to 0°
             * imagePath `string`: The file path to the image. It is stored relative if close enough. Otherwise the full path.
-            * locked `bool`: Always set to `1`, otherwise omit the key
+            * locked `bool`
             * pos `tuple`: the origin
             * scale `tuple`: `(scaleX,scaleY)`
         * color `int` or `tuple`:
@@ -139,8 +140,8 @@ The property list file contains a dictionary with the following structure.
         * guides `list>dict`
             * alignment `string`: If the guide is `right` or `center` aligned. Default: `left`
             * angle `float`: The angle. If not set defaults to 0°
-            * locked `int`: Always set to `1`, otherwise omit the key
-            * showMeasurement `int`: Always set to `1`, otherwise omit the key
+            * locked `bool`
+            * showMeasurement `int`
             * pos `tuple`: the origin
         * hints `list>dict`
             * horizontal `int`: If set, the hint is horizontal and vertical otherwise
@@ -155,10 +156,10 @@ The property list file contains a dictionary with the following structure.
                 For details see `origin` above. 
                 additional:
                 - ghostDirection `up|down`
-            * other1 `tuple`: 
+            * other1 `tuple`
                 For TT Institutions that need more than two nodes (Interpolation, Diagonal)
                 For details see `origin` above. 
-            * other2 `tuple`: 
+            * other2 `tuple`
                 For TT Institutions that need more than three nodes (Diagonal)
                 For details see `origin` above. 
             * scale `tuple`: `(scaleX,scaleY)` Only used for caps and corners
@@ -186,7 +187,7 @@ The property list file contains a dictionary with the following structure.
                 * anchorTo `string`: TODO
                 * angle `float`: the rotation
                 * attr: `dict`: see [Attributes](*attributes)
-                * locked `bool`: Always set to `1`, otherwise omit the key.
+                * locked `bool`
                 * orientation `int`: if left, center or right aligned
                 * piece `dict>string:float`: keys are the name of the smart property, values a position on the axis.
                 * pos `tuple`: the position
@@ -196,9 +197,9 @@ The property list file contains a dictionary with the following structure.
         * userDate `dict`: A dict with user defined structure
         * vertOrigin `float`: Offset from default (ascender). Defaults to `0`
         * vertWidth `float`: Only stored if other than the default (ascender+descender)
-        * visible `bool`: The visibility setting in the layer panel (the eye symbol). Always set to `1`, otherwise omit the key.
+        * visible `bool`: The visibility setting in the layer panel (the eye symbol).
         * width `float`:
-    * locked `bool`: Always set to `1`, otherwise omit the key.
+    * locked `bool`: .
     * metricBottom `string`:
     * metricLeft `string`:
     * metricRight `string`:
@@ -220,18 +221,18 @@ The property list file contains a dictionary with the following structure.
     * customParameters `list>dict`: Instance custom parameters.
         * name `string`: Property name of the custom parameter.
         * value `string`: Value of the custom parameters.
-    * exports `bool`: Always set to `0`, otherwise omit the key.
+    * exports `bool`: Defaults to *true* if not present.
     * instanceInterpolations `dict`: keys are master IDs, values are the factors for that master.
-    * isBold `bool`: for style linking. Always set to `1`, otherwise omit the key.
-    * isItalic `bool`: for style linking. Always set to `1`, otherwise omit the key.
+    * isBold `bool`: for style linking.
+    * isItalic `bool`: for style linking.
     * linkStyle `string`: The linked style name
-    * manualInterpolation `bool`: If set, use the `instanceInterpolations`, otherwise calculate from `axisValues`. Always set to `1`, otherwise omit the key.
+    * manualInterpolation `bool`: If true, use the `instanceInterpolations`; if false, calculate from `axisValues`.
     * name `string`: The style name.
     * properties: `list>dict`: see [Properties](#properties)
     * userData `dict`: to store custom data. Only `string`, `int`, `float`, `array`, `dict` and `date` data is allowed.
     * weightClass `string`:
     * widthClass `string`:
-* keepAlternatesTogether: `bool`: Always set to `1`, otherwise omit the key.
+* keepAlternatesTogether: `bool`
 * kerningLTR `dict`: three-level `dict` containing a `float` as value.
     * first level key is the master ID.
     * second level is either the left kerning group name or glyph name.
@@ -247,8 +248,8 @@ The property list file contains a dictionary with the following structure.
     * name `string`: name of the number
 * properties `list>dict`: see [Properties](#properties)
 * settings `dict`:
-    * disablesAutomaticAlignment `bool`: Always set to `1`, otherwise omit the key
-    * disablesNiceNames `bool`: Always set to `1`, otherwise omit the key
+    * disablesAutomaticAlignment `bool`
+    * disablesNiceNames `bool`
     * gridLength `int`: Only written if not `1`
     * gridSubDivision `int`: Only written if bigger then `1`
     * keyboardIncrement `float`: Only written if not `1`
