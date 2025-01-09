@@ -26,6 +26,7 @@ Glyphs saves its files in plaintext format. So the files can be viewed and edite
 - empty elements are always omitted.
     * except: in `userData` entires. There the structure is preserved.
 - Numbers are always written without quotes (negative and float). Strings that look like numbers are written with quotes (mostly important in userData).
+- Boolean values are written as integers `0` or `1`. The entry is not present if the value is the default value for the field. Generally the default for a boolean field is false, but there are some cases noted below where the default is true.
 - Unicodes are written as hex string but always without quotes so it might be ambiguous for a general parser ('1234' could be read as int or hex)
 - The last element in a list doesn’t get a trailing comma.
 
@@ -35,9 +36,9 @@ The XML file contains a dictionary with the following structure. The elements wi
 * .appVersion `string`
 * DisplayStrings `list`
 * classes `list`: OpenType classes.
-    * automatic `bool`: Always set to `1`. If the feature is not set to automatic, the key should be omitted.
+    * automatic `bool`
     * code `string`: A string containing space separated glyph names.
-    * disabled `bool`: The class will not be exported. Always set to `1`, otherwise omit the key
+    * disabled `bool`: If true, the class will not be exported.
     * name `string`: The OpenType class name.
     * notes `string`: Notes.
 * copyright `string`
@@ -47,19 +48,19 @@ The XML file contains a dictionary with the following structure. The elements wi
 * date `string`: Format `2014-01-29 14:14:38 +0000`.
 * designer `string`
 * designerURL `string`
-* disablesAutomaticAlignment `bool`: Always set to `1`, otherwise omit the key
-* disablesNiceNames `bool` is always set to `1`. If not set the key is not set at all.
+* disablesAutomaticAlignment `bool`
+* disablesNiceNames `bool`
 * familyName `string`
 * featurePrefixes `list`: OpenType feature code before the class definitions.
-    * automatic `bool`: Always set to `1`, otherwise omit the key
+    * automatic `bool`
     * code `string`: A string containing feature code.
-    * disabled `bool`: The prefix will not be exported. Always set to `1`, otherwise omit the key
+    * disabled `bool`: The prefix will not be exported.
     * name `string`: The name of the prefix
     * notes `string`: Notes.
 * features `list`
-    * automatic `bool` is always set to `1`. If not set the key is not set at all.
+    * automatic `bool`
     * code `string`: a string containing feature code.
-    * disabled `bool`: The feature will not be exported. Always set to `1`, otherwise omit the key
+    * disabled `bool`: The feature will not be exported.
     * name `string`: the feature tag.
     * notes `string`: The feature notes. For stylistic sets, the note can contain a `featureNames` definition or a `Name:` + feature name
 * fontMaster `list`
@@ -67,10 +68,10 @@ The XML file contains a dictionary with the following structure. The elements wi
     * ascender `int`
     * capHeight `int`
     * custom `string` : All other parts of the master name that doesn’t fit into `weight` or `width`
-    * customValue `int`: axis position for the third axis. Is only present if the value is not `0`.
-    * customValue1 `int`: axis position for the forth  axis. Is only present if the value is not `0`.
-    * customValue2 `int`: axis position for the fifth  axis. Is only present if the value is not `0`.
-    * customValue3 `int`: axis position for the sixth  axis. Is only present if the value is not `0`.
+    * customValue `int`: axis position for the third axis. Not present if the value is the default `0`.
+    * customValue1 `int`: axis position for the fourth axis. Not present if the value is the default `0`.
+    * customValue2 `int`: axis position for the fifth axis. Not present if the value is the default `0`.
+    * customValue3 `int`: axis position for the sixth axis. Not present if the value is the default `0`.
     * customParameters `list`: Master-wide custom parameters.
         * name `string`: Property name of the custom parameter.
         * value `string`: Value of the custom parameter.
@@ -81,15 +82,15 @@ The XML file contains a dictionary with the following structure. The elements wi
     * italicAngle `int`: italic angle in degrees. Positive is clockwise (forward slant).
     * userData `dict` to store custom data. Only `string`, `int`, `float`, `array`, `dict` and `date` data is allowed.
     * verticalStems `list`: a list of `int` values.
-    * visible `int`: Always set to `1`. If not set, the key is not present at all.
+    * visible `bool`: Defaults to *true* if not present.
     * weight `string` : The weight part of the master name. Possible values "SemiLight", "Light", "SemiBold", "Bold"
-    * weightValue `int`: The weight position for interpolation. Is only present if the value is not `100`.
+    * weightValue `int`: The weight position for interpolation. Not present if the value is the default `100`.
     * width `string` : The width part of the master name. Possible values "SemiCondensed", "Condensed", "SemiExtended", "Extended"
-    * widthValue `int`: The width position for interpolation. Is only present if the value is not `100`.
+    * widthValue `int`: The width position for interpolation. Not present if the value is the default `100`.
     * xHeight `int`
 * glyphs `list`
     * glyphname `string`: Must be unique throughout the font.
-    * export `bool`: Always set to `1`, otherwise omit the key
+    * export `bool`
     * production `string`: manually set production name (new in v2.2)
     * script `string`: manually set script (new in v2.2)
     * category `string`: manually set category (new in v2.2)
@@ -108,7 +109,7 @@ The XML file contains a dictionary with the following structure. The elements wi
         * backgroundImage `dict`: a image.
             * crop `string`: Portion of the image to show in pixels, format: `{{t,l},{b,r}}`
             * imagePath `string`: The file path to the image. It is stored relative if close enough. Otherwise the full path.
-            * locked `bool`: Always set to `1`, otherwise omit the key
+            * locked `bool`
             * transform `string`: An affine transformation matrix, format: `{m11, m12, m21, m22, tX, tY}`.
         * components `list`
             * anchor `string`: Should be indicated if connected to an anchor, especially if more than one possibility is available, e.g. in ligatures.
@@ -119,8 +120,8 @@ The XML file contains a dictionary with the following structure. The elements wi
         * guideLines `list`
             * alignment `string`: If the guide is `right` or `center` aligned. Default: `left`
             * angle `float`: The angle. If not set defaults to 0°
-            * locked `int`: is always `1`, otherwise the field is not there
-            * showMeasurement `int`: is always `1`, otherwise the field is not there
+            * locked `bool`
+            * showMeasurement `bool`
             * position `string`: format `{X, Y}`
         * hints `list`
             * horizontal `int`: If set, the hint is horizontal and vertical otherwise
@@ -140,12 +141,12 @@ The XML file contains a dictionary with the following structure. The elements wi
         * widthMetricsKey `string`
         * name `string`: The name of the layer. Only stored for none master layers (this is changed in 2.3, before the master names where stored)
         * paths `list`
-            * closed `bool`: Always set to `1`. If not set, the key is not present at all.
+            * closed `bool`
             * nodes `list`: One entry per node. Format: `X Y TYPE [SMOOTH]`, where X and Y are the coordinates as float, and TYPE is either `LINE`, `CURVE` or `OFFCURVE`. After `LINE` and `CURVE`, you can additionally add a `SMOOTH`.
         * userDate `dict`: A dict with user defined structure
         * vertWidth `float`: Only stored if other than the default (ascender+descender)
         * width `float`
-        * visible `int`: Always set to `1`. If not set, the key is not present at all.
+        * visible `bool`: Defaults to *true* if not present.
     * leftKerningGroup `string`
     * leftMetricsKey `string`
     * rightKerningGroup `string`
@@ -157,7 +158,7 @@ The XML file contains a dictionary with the following structure. The elements wi
     * customParameters `list`: Instance custom parameters.
         * name `string`: Property name of the custom parameter.
         * value `string`: Value of the custom parameters.
-    * exports `bool`: Always set to `0`, otherwise omit the key.
+    * exports `bool`: Defaults to *true* if not present.
     * interpolationCustom `float`: axis position for the third axis
     * interpolationCustom1 `float`: axis position for the fourth axis
     * interpolationCustom2 `float`: axis position for the fifth axis
@@ -165,15 +166,15 @@ The XML file contains a dictionary with the following structure. The elements wi
     * interpolationWeight `float`: axis position for the first axis
     * interpolationWidth `float`: axis position for the second axis
     * instanceInterpolations `dict`: keys are master IDs, values are the factors for that master.
-    * isBold `bool`: for style linking. Always set to `1`, otherwise omit the key.
-    * isItalic `bool`: for style linking. Always set to `1`, otherwise omit the key.
+    * isBold `bool`: for style linking.
+    * isItalic `bool`: for style linking.
     * linkStyle `string`: The linked style name
-    * manualInterpolation `bool`: If set, use the `instanceInterpolations`, otherwise calculate from `axisValues`. Always set to `1`, otherwise omit the key.
+    * manualInterpolation `bool`: If set, use the `instanceInterpolations`, otherwise calculate from `axisValues`.
     * name `string`: The style name.
     * userData `dict`: to store custom data. Only `string`, `int`, `float`, `array`, `dict` and `date` data is allowed.
     * weightClass `string`:
     * widthClass `string`:
-* keepAlternatesTogether: `bool`: Always set to `1`, otherwise omit the key.
+* keepAlternatesTogether: `bool`
 * kerning `dict`: three-level `dict` containing a `float` as value.
     * first level key is the master ID.
     * second level is either the left kerning group name or glyph name.
