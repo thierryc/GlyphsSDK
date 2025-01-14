@@ -1369,7 +1369,7 @@
 								]
 							},
 							"minItems": 2,
-							"description": "A ascending list of code point values.",
+							"description": "An ascending list of code point values.",
 							"glyphsCondition": {
 								"minVersion": 3
 							}

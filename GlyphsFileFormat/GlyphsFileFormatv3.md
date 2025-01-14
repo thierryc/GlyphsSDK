@@ -212,7 +212,7 @@ Use the following JSON schemas to validate files.
     - <code><strong>name</strong>: string</code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The name of the custom parameter.
     - <code><strong>value</strong></code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The value of the custom parameter.
 - <a name="spec-glyphs-3-displayStrings"></a><code><strong>displayStrings</strong>: array</code>
-    - <code><strong>#n</strong>: string</code>
+    - <code><strong>#</strong>: string</code>
 - <a name="spec-glyphs-3-featurePrefix"></a><code><strong>featurePrefix</strong>: object</code> – (`GSFeaturePrefix`)
     - <code><strong>automatic</strong>: boolean = false</code> – Whether the code of the feature prefix is generated automatically.
     - <code><strong>code</strong>: string = ""</code> – The code of the feature prefix. Example: `"languagesystem DFLT dflt;"`.
@@ -230,7 +230,7 @@ Use the following JSON schemas to validate files.
 - <a name="spec-glyphs-3-fontMaster"></a><code><strong>fontMaster</strong>: object</code> – (`GSFontMaster`)
     - <code><strong>active</strong>: boolean = true</code> – Whether the master is active.
     - <code><strong>axesValues</strong>: array = []</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The designspace location of the master.
-        - <code><strong>#n</strong>: number</code> (`f64`)
+        - <code><strong>#</strong>: number</code> (`f64`)
     - <code><strong>customParameters</strong>: array = []</code> – The custom parameters of the master.
  See [`customParameter`](#spec-glyphs-3-customParameter) for items.
     - <code><strong>guides</strong>: array = []</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The global guides of the master.
@@ -238,16 +238,16 @@ Use the following JSON schemas to validate files.
     - <code><strong>iconName</strong>: string = "Regular"</code> – The name of the icon that represents the master. Generally omitted when equal to `Regular`, or equal to the default icon name of the master (`GSFontMaster.defaultIconName`).
     - <code><strong>id</strong>: string</code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The unique identifier of the master.
     - <code><strong>metricValues</strong>: array = []</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The metric values of the master.
-        - <code><strong>#n</strong>: object</code>
+        - <code><strong>#</strong>: object</code>
             - <code><strong>over</strong>: number</code> (`f64`) – The overshoot of the metric value.
             - <code><strong>pos</strong>: number</code> (`f64`) – The offset from the baseline of the metric value.
     - <code><strong>name</strong>: string</code> – The name of the master. May be omitted in file format version 1 when equal to `Regular` or the default master name.
     - <code><strong>numberValues</strong>: array = []</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The number values of the master.
-        - <code><strong>#n</strong>: number</code> (`f64`)
+        - <code><strong>#</strong>: number</code> (`f64`)
     - <code><strong>properties</strong>: array = []</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The properties of the master.
  See [`infoProperty`](#spec-glyphs-3-infoProperty) for items.
     - <code><strong>stemValues</strong>: array = []</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The stem values of the master.
-        - <code><strong>#n</strong>: number</code> (`f64`)
+        - <code><strong>#</strong>: number</code> (`f64`)
     - <code><strong>tempData</strong>: object = {}</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – Auto-save files only: Temporary data associated with the master. See [`userData`](#spec-glyphs-3-userData).
     - <code><strong>userData</strong>: object = {}</code> – Custom data associated with the master. See [`userData`](#spec-glyphs-3-userData).
     - <code><strong>visible</strong>: boolean = true</code> – Whether the master is visible in the preview.
@@ -284,12 +284,12 @@ Use the following JSON schemas to validate files.
     - <code><strong>sortNameKeep</strong>: string</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The sort name of the glyph used in the *Keep Alternates Next to Base Glyph* display mode. If unset, then the sort name is based on a glyph data lookup based on the glyph name.
     - <code><strong>subCategory</strong>: string</code> – The subcategory of the glyph. If unset, then the subcategory is based on a glyph data lookup based on the glyph name.
     - <code><strong>tags</strong>: array = []</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The tags of the glyph, sorted lexicographically.
-        - <code><strong>#n</strong>: string</code>
+        - <code><strong>#</strong>: string</code>
     - <code><strong>unicode</strong></code> – The Unicode code points of the glyph. One of 2 options.
         - Option. `integer` (`u32`) <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The code point value. Examples: `65`, `125184`, `0`.
-        - Option. `array` <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – A ascending list of code point values.
+        - Option. `array` <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – An ascending list of code point values.
  Min count: 2.
-            - <code><strong>#n</strong>: integer</code> (`u32`) Examples: `65`, `125184`, `0`.
+            - <code><strong>#</strong>: integer</code> (`u32`) Examples: `65`, `125184`, `0`.
     - <code><strong>userData</strong>: object = {}</code> – Custom data associated with the glyph. See [`userData`](#spec-glyphs-3-userData).
 - <a name="spec-glyphs-3-guide"></a><code><strong>guide</strong>: object</code> – (`GSGuide`)
     - <code><strong>angle</strong>: number = 0</code> (`f64`) – The angle at which the guide is drawn in degrees clockwise.
@@ -344,7 +344,7 @@ Use the following JSON schemas to validate files.
     - <code><strong>slant</strong>: array = [0, 0]</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The slant factor of the image. See [`slant`](#spec-glyphs-3-slant).
 - <a name="spec-glyphs-3-instance"></a><code><strong>instance</strong>: object</code> – (`GSInstance`)
     - <code><strong>axesValues</strong>: array</code> – The internal axis locations of the instance. These values are also used for the external axis locations, if no external axis locations are specified separately.
-        - <code><strong>#n</strong>: number</code> (`f64`)
+        - <code><strong>#</strong>: number</code> (`f64`)
     - <code><strong>customParameters</strong>: array = []</code> – The custom parameters of the instance.
  See [`customParameter`](#spec-glyphs-3-customParameter) for items.
     - <code><strong>exports</strong>: boolean = true</code> – Whether the instance is exported.

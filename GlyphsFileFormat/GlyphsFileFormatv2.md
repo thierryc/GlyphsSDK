@@ -160,7 +160,7 @@ Use the following JSON schemas to validate files.
     - <code><strong>name</strong>: string</code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The name of the custom parameter.
     - <code><strong>value</strong></code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The value of the custom parameter.
 - <a name="spec-glyphs-1-displayStrings"></a><code><strong>displayStrings</strong>: array</code>
-    - <code><strong>#n</strong>: string</code>
+    - <code><strong>#</strong>: string</code>
 - <a name="spec-glyphs-1-featurePrefix"></a><code><strong>featurePrefix</strong>: object</code> – (`GSFeaturePrefix`)
     - <code><strong>automatic</strong> = false</code> – Whether the code of the feature prefix is generated automatically.
         - Possible values: `0`, `"0"`, `1`, `"1"`.
@@ -181,7 +181,7 @@ Use the following JSON schemas to validate files.
     - <code><strong>active</strong> = true</code> – Whether the master is active.
         - Possible values: `0`, `"0"`, `1`, `"1"`.
     - <code><strong>alignmentZones</strong>: array = []</code> – The alignment zones of the master.
-        - <code><strong>#n</strong>: string</code> Examples: `"{0, -10}"`, `"{700, 16}"`.
+        - <code><strong>#</strong>: string</code> Examples: `"{0, -10}"`, `"{700, 16}"`.
     - <code><strong>ascender</strong>: number</code> (`f64`) <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The ascender metric of the master.
     - <code><strong>capHeight</strong>: number</code> (`f64`) <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The cap height metric of the master.
     - <code><strong>custom</strong>: string</code> – The custom name of the master.
@@ -195,14 +195,14 @@ Use the following JSON schemas to validate files.
     - <code><strong>guideLines</strong>: array = []</code> – The global guides of the master.
  See [`guide`](#spec-glyphs-1-guide) for items.
     - <code><strong>horizontalStems</strong>: array = []</code> – The horizontal stems of the master.
-        - <code><strong>#n</strong>: number</code> (`f64`)
+        - <code><strong>#</strong>: number</code> (`f64`)
     - <code><strong>iconName</strong>: string = "Regular"</code> – The name of the icon that represents the master. Generally omitted when equal to `Regular`, or equal to the default icon name of the master (`GSFontMaster.defaultIconName`).
     - <code><strong>id</strong>: string</code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The unique identifier of the master.
     - <code><strong>italicAngle</strong>: number = 0</code> (`f64`) – The italic angle of the master in degrees clockwise.
     - <code><strong>name</strong>: string</code> – The name of the master. May be omitted in file format version 1 when equal to `Regular` or the default master name.
     - <code><strong>userData</strong>: object = {}</code> – Custom data associated with the master. See [`userData`](#spec-glyphs-1-userData).
     - <code><strong>verticalStems</strong>: array = []</code> – The vertical stems of the master.
-        - <code><strong>#n</strong>: number</code> (`f64`)
+        - <code><strong>#</strong>: number</code> (`f64`)
     - <code><strong>visible</strong> = true</code> – Whether the master is visible in the preview.
         - Possible values: `0`, `"0"`, `1`, `"1"`.
     - <code><strong>weight</strong>: string = "Regular"</code> – The weight name of the master.
@@ -282,7 +282,7 @@ Use the following JSON schemas to validate files.
     - <code><strong>transform</strong>: string</code> – The transformation matrix of the image (m11, m12, m21, m22, tX, tY). Examples: `"{1, 0, 0, 1, 0, 0}"`, `"{0.5, 0, 0, 0.5, 0, 0}"`.
 - <a name="spec-glyphs-1-instance"></a><code><strong>instance</strong>: object</code> – (`GSInstance`)
     - <code><strong>axesValues</strong>: array</code> – The internal axis locations of the instance. These values are also used for the external axis locations, if no external axis locations are specified separately.
-        - <code><strong>#n</strong>: number</code> (`f64`)
+        - <code><strong>#</strong>: number</code> (`f64`)
     - <code><strong>customParameters</strong>: array = []</code> – The custom parameters of the instance.
  See [`customParameter`](#spec-glyphs-1-customParameter) for items.
     - <code><strong>exports</strong> = true</code> – Whether the instance is exported.
