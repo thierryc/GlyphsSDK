@@ -66,7 +66,7 @@ The following Backus–Naur form describes the syntax of the Glyphs file format.
                    | 'U' <base16> <base16> <base16> <base16>;
 <base8>          ::= '0'-'7';
 <base16>         ::= '0'-'9' | 'A'-'F' | 'a'-'f';
-<quoted-char>    ::= { any character except '"' and '' };
+<quoted-char>    ::= { any character except '"' and '\' };
 <string-bare>    ::= <unquoted-start> ( <unquoted-char> )*;
 <unquoted-start> ::= '$' | '+' | '.' | '/' | ':' | 'A'-'Z' | '_' | 'a'-'z';
 <unquoted-char>  ::= <unquoted-start> | '-' | '0'-'9';
