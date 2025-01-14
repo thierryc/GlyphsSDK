@@ -55,7 +55,7 @@ The following Backus–Naur form describes the syntax of the Glyphs file format.
 <ws>             ::= ( ' ' | '\t' | '\n' )*;
 <value>          ::= <dictionary> | <array> | <string> | <number> | <data>;
 <dictionary>     ::= '{' <ws> ( <key-value-pair> <ws> )* '}';
-<key-value-pair> ::= <key> <ws> '=' <ws> <value> ';';
+<key-value-pair> ::= <string> <ws> '=' <ws> <value> ';';
 <array>          ::= '(' <ws> [ <array-elements> <ws> ] ')';
 <array-elements> ::= <value> [ <ws> ',' ]
                    | <value> <ws> ',' <ws> <array-elements>;
