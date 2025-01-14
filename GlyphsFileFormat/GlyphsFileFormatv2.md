@@ -59,8 +59,8 @@ The following Backus–Naur form describes the syntax of the Glyphs file format.
 
 Use the following JSON schemas to validate files.
 
-- [glyphs-1.schema.json](https://info.glyphsapp.com/schema/glyphs-1.schema.json)
-- [glyphs-autosave-1.schema.json](https://info.glyphsapp.com/schema/glyphs-autosave-1.schema.json)
+- [glyphs-1.schema.json](https://github.com/schriftgestalt/GlyphsSDK/blob/Glyphs3/GlyphsFileFormat/Schemas/glyphs-1.schema.json)
+- [glyphs-autosave-1.schema.json](https://github.com/schriftgestalt/GlyphsSDK/blob/Glyphs3/GlyphsFileFormat/Schemas/glyphs-autosave-1.schema.json)
 
 ## Document
 
