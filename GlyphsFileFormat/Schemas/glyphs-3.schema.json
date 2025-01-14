@@ -3004,11 +3004,11 @@
 			"enum": [
 				3
 			],
+			"description": "The version of the file format. If unset, the file is considered to be version 1 as used by Glyphs 1 and Glyphs 2.",
 			"glyphsCondition": {
 				"minVersion": 3
 			},
 			"type": "integer",
-			"description": "The version of the file format. Set to `4` for version 4 or `3` for version 3. If unset, the file is considered to be version 1 as used by Glyphs 1 and Glyphs 2.",
 			"glyphsLabel": {
 				"key": "document.format-version",
 				"default": "Format Version"
