@@ -1,190 +1,431 @@
 # Glyphs File Format, Version 2
-Glyphs saves its files in plaintext format. So the files can be viewed and edited with any text editor. Open an existing `.glyphs` file to see how it works.
 
-- The format is based on Apples old style property list (plist) format.
-- It doesn’t use the more common XML-based flavor (that is supported for reading) to save space.
-- There are some small deviations from the default format. More about that in Notes.
+Glyphs saves its source files in a plain-text format.
+This way, files can be viewed and edited in any text editor.
+
+## File Format Details
+
+- The file format is based on OpenStep Property Lists (also known as NeXTSTEP, ASCII, or old-style Property Lists).
+- This format can be converted to JSON for validation against a JSON Schema.
+- The file contents are UTF-8 encoded.
+- In addition to the four core data types (dictionary, array, string, and data), Glyphs uses unquoted strings to represent numbers (integers, floats, and booleans).
+  Booleans are encoded as `1` or `"1"` (true) and `0` or `"0"` (false).
+  Strings that look like numbers are always encoded in quotes.
+- Whitespace is restricted to ASCII spaces, line feeds, and horizontal tabs.
+- No comments (like `// ...` or `/* .... */`) are present.
+- No indentation is used to reduce file size.
+- Dictionaries and arrays are generally broken onto lines such that each key or element starts on a new line.
+  When empty, they span two lines, one for the opening and one for the closing bracket.
+- Some arrays are encoded on a single line for better readability and to reduce file size.
+  These are mostly arrays used as tuples like points with X/Y coordinates.
+  The `glyphsCompact` attribute in the JSON Schema indicates that the array is encoded on a single line.
+- Some string values do not escape horizontal tab and line feed characters, instead using the literal characters.
+  This improves readability.
+- Several values cannot be edited in isolation, as they are interdependent.
+  For example, changing the order of elements in a list may require matching changes in other parts of the file.
+- Empty dictionaries and arrays are generally omitted, except for values of a `userData` property where the structure is preserved.
+
+## Syntax
+
+The following Backus–Naur form describes the syntax of the Glyphs file format.
+
+```xml
+<document>       ::= <ws> <value> <ws>;
+<ws>             ::= ( ' ' | '\t' | '\n' )*;
+<value>          ::= <dictionary> | <array> | <string> | <number> | <data>;
+<dictionary>     ::= '{' <ws> ( <key-value-pair> <ws> )* '}';
+<key-value-pair> ::= <key> <ws> '=' <ws> <value> ';';
+<array>          ::= '(' <ws> [ <array-elements> <ws> ] ')';
+<array-elements> ::= <value> [ <ws> ',' ]
+                   | <value> <ws> ',' <ws> <array-elements>;
+<string>         ::= <string-quoted> | <string-bare>;
+<string-quoted>  ::= '"' ( '\' <escape-sequece> | <quoted-char> )* '"';
+<escape-sequece> ::= '\' | 'a' | 'b' | 'e' | 'f' | 'n' | 'r' | 't' | 'v' | '\n'
+                   | <base8> [ <base8> [ <base8> ] ]
+                   | 'U' <base16> <base16> <base16> <base16>;
+<base8>          ::= '0'-'7';
+<base16>         ::= '0'-'9' | 'A'-'F' | 'a'-'f';
+<quoted-char>    ::= { any character except '"' and '' };
+<string-bare>    ::= <unquoted-start> ( <unquoted-char> )*;
+<unquoted-start> ::= '$' | '+' | '.' | '/' | ':' | 'A'-'Z' | '_' | 'a'-'z';
+<unquoted-char>  ::= <unquoted-start> | '-' | '0'-'9';
+<number>         ::= [ '-' ] ( '0'-'9' )+ [ '.' ( '0'-'9' )+ ];
+<data>           ::= '<' <ws> [ <data-content> <ws> ] '>';
+<data-content>   ::= <data-byte> [ <ws> <data-byte> ]*;
+<data-byte>      ::= <base16> <ws> <base16>;
+```
+
+## Schema
+
+Use the following JSON schemas to validate files.
+
+- [glyphs-1.schema.json](https://info.glyphsapp.com/schema/glyphs-1.schema.json)
+- [glyphs-autosave-1.schema.json](https://info.glyphsapp.com/schema/glyphs-autosave-1.schema.json)
+
+## Document
+
+- <code><strong>.appVersion</strong>: string</code> ![required](https://img.shields.io/badge/required-204d7e) – The build number of Glyphs used to save the file. Example: `"3210"`.
+- <code><strong>DisplayStrings</strong>: array = []</code> – The strings of the Edit View tabs. Omitted when the `Write DisplayStrings` custom parameter is set to false. Omitted and written as `displayStrings` to `UIState.plist` in case of a package file. See [`displayStrings`](#spec-glyphs-1-displayStrings).
+- <code><strong>classes</strong>: array = []</code> – The OpenType layout classes of the font.
+    - <code><strong>#n</strong>: object</code> See [`class`](#spec-glyphs-1-class).
+- <code><strong>copyright</strong>: string</code> – The copyright notice.
+- <code><strong>customParameters</strong>: array = []</code> – The custom parameters of the font.
+    - <code><strong>#n</strong>: object</code> See [`customParameter`](#spec-glyphs-1-customParameter).
+- <code><strong>date</strong>: string</code> – The moment in time that is used as the creation date of exported font files including date, time, and timezone. Example: `"2024-07-17 03:14:15 +0000"`.
+- <code><strong>designer</strong>: string</code> ![required](https://img.shields.io/badge/required-204d7e) – The name of the designer.
+- <code><strong>designerURL</strong>: string</code> ![required](https://img.shields.io/badge/required-204d7e) – The URL to the designer.
+- <code><strong>disablesAutomaticAlignment</strong> = false</code> – Whether automatic alignment of components is disabled.
+    - Possible values: `0`, `"0"`, `1`, `"1"`.
+- <code><strong>disablesNiceNames</strong> = false</code> – Whether to use production names instead of nice names.
+    - Possible values: `0`, `"0"`, `1`, `"1"`.
+- <code><strong>familyName</strong>: string</code> – The font family name. Corresponds to the default value of the `familyNames` property.
+- <code><strong>featurePrefixes</strong>: array = []</code> – The OpenType layout feature prefixes of the font.
+    - <code><strong>#n</strong>: object</code> See [`featurePrefix`](#spec-glyphs-1-featurePrefix).
+- <code><strong>features</strong>: array = []</code> – The OpenType layout features of the font.
+    - <code><strong>#n</strong>: object</code> See [`feature`](#spec-glyphs-1-feature).
+- <code><strong>fontMaster</strong>: array</code> ![required](https://img.shields.io/badge/required-204d7e) – The masters of the font.
+ – Array (min count: 1).
+    - <code><strong>#n</strong>: object</code> See [`fontMaster`](#spec-glyphs-1-fontMaster).
+- <code><strong>glyphs</strong>: array</code> ![required](https://img.shields.io/badge/required-204d7e) – The glyphs of the font. The order is used on export unless the `glyphOrder` custom parameter is set.
+    - <code><strong>#n</strong>: object</code> See [`glyph`](#spec-glyphs-1-glyph).
+- <code><strong>gridLength</strong>: integer = 1</code> (`u32`) – The main grid length.
+- <code><strong>gridSubDivision</strong>: integer = 1</code> (`u32`) – The grid sub-division size.
+- <code><strong>instances</strong>: array = []</code> – The instances of the font.
+    - <code><strong>#n</strong>: object</code> See [`instance`](#spec-glyphs-1-instance).
+- <code><strong>keepAlternatesTogether</strong> = false</code> – Whether to keep alternates glyphs together in Font View.
+    - Possible values: `0`, `"0"`, `1`, `"1"`.
+- <code><strong>kerning</strong>: object = {}</code> – The kerning of the font. See [`kerning`](#spec-glyphs-1-kerning).
+- <code><strong>keyboardIncrement</strong>: number = 1</code> (`f32`) – The standard keyboard increment.
+- <code><strong>keyboardIncrementBig</strong>: number = 10</code> (`f32`) – The keyboard increment when holding the Shift key.
+- <code><strong>keyboardIncrementHuge</strong>: number = 100</code> (`f32`) – The keyboard increment when holding both the Shift and Command key.
+- <code><strong>manufacturer</strong>: string</code> ![required](https://img.shields.io/badge/required-204d7e) – The name of the manufacturer.
+- <code><strong>manufacturerURL</strong>: string</code> ![required](https://img.shields.io/badge/required-204d7e) – The URL to the manufacturer.
+- <code><strong>unitsPerEm</strong>: integer</code> (`u32`) ![required](https://img.shields.io/badge/required-204d7e) – The number of coordinate units on the em square.
+- <code><strong>userData</strong>: object = {}</code> – Custom data associated with the font. See [`userData`](#spec-glyphs-1-userData).
+- <code><strong>versionMajor</strong>: integer</code> (`u32`) ![required](https://img.shields.io/badge/required-204d7e) – The major version number of the font.
+- <code><strong>versionMinor</strong>: integer</code> (`u32`) ![required](https://img.shields.io/badge/required-204d7e) – The minor version number of the font.
+- <code><strong>vertKerning</strong>: object = {}</code> – The vertical kerning of the font. See [`kerning`](#spec-glyphs-1-kerning).
+## Definitions
+
+- <a name="spec-glyphs-1-anchor"></a><code><strong>anchor</strong>: object</code> – (`GSAnchor`)
+    - <code><strong>name</strong>: string</code> ![required](https://img.shields.io/badge/required-204d7e) – The name of the anchor.
+    - <code><strong>position</strong>: string</code> ![required](https://img.shields.io/badge/required-204d7e) – The position of the anchor. See [`legacyPosition`](#spec-glyphs-1-legacyPosition). Examples: `"{0, 50}"`, `"{-30.5, 600}"`.
+- <a name="spec-glyphs-1-annotation"></a><code><strong>annotation</strong>: object</code> – (`GSAnnotation`)
+    - <code><strong>angle</strong>: number = 0</code> (`f64`) – The angle of the annotation in degrees clockwise.
+    - <code><strong>position</strong>: string</code> ![required](https://img.shields.io/badge/required-204d7e) – The position of the annotation. See [`legacyPosition`](#spec-glyphs-1-legacyPosition). Examples: `"{0, 50}"`, `"{-30.5, 600}"`.
+    - <code><strong>text</strong>: string = ""</code> – The text of an text-type annotation.
+    - <code><strong>type</strong>: string</code> ![required](https://img.shields.io/badge/required-204d7e) – The type of the annotation.
+        - Possible values: `"Text"`, `"Arrow"`, `"Circle"`, `"Plus"`, `"Minus"`.
+    - <code><strong>width</strong>: number = 0</code> (`f64`) – The width of an text- or circle-type annotation.
+- <a name="spec-glyphs-1-attr"></a><code><strong>attr</strong>: object</code>
+- <a name="spec-glyphs-1-attrShape"></a><code><strong>attrShape</strong>: object</code>
+- <a name="spec-glyphs-1-axis"></a><code><strong>axis</strong>: object</code> – (`GSAxis`)
+    - <code><strong>default</strong>: number = 0</code> (`f64`) – The default location on the axis.
+    - <code><strong>hidden</strong> = false</code> – Whether the axis is considered to be hidden from the font user.
+        - Possible values: `0`, `"0"`, `1`, `"1"`.
+    - <code><strong>name</strong>: string = ""</code> – The user-facing name of the axis.
+    - <code><strong>tag</strong>: string = ""</code> – The OpenType tag of the axis. Must be unique within the font. The tag may be longer than four characters in which case only the first four characters are considered to be the canonical tag of the axis and the rest is used as a differentiating identifier. On export, the canonical tag is used. Multiple axes with the same canonical tag are useful for higher-order interpolation.
+- <a name="spec-glyphs-1-class"></a><code><strong>class</strong>: object</code> – (`GSClass`)
+    - <code><strong>automatic</strong> = false</code> – Whether the code of the class is generated automatically.
+        - Possible values: `0`, `"0"`, `1`, `"1"`.
+    - <code><strong>code</strong>: string = ""</code> – The code of the class. Note that this code may not just be a whitespace-separated list of glyph names but may also contain comments and other feature code constructs. Examples: `"A B C"`, `"noon-ar noon-ar.fina noon-ar.medi noon-ar.init # noon-ar glyphs"`.
+    - <code><strong>disabled</strong> = false</code> – Whether the class is disabled.
+        - Possible values: `0`, `"0"`, `1`, `"1"`.
+    - <code><strong>name</strong>: string</code> ![required](https://img.shields.io/badge/required-204d7e) – The name of the class. The leading at sign (`@`) is not included. Examples: `"Uppercase"`, `"CombiningTopAccents"`.
+    - <code><strong>notes</strong>: string = ""</code> – A string serving as a description or comment about the class.
+- <a name="spec-glyphs-1-color"></a><code><strong>color</strong>: array</code> – An RGB color with an alpha channel in the sRGB IEC61966-2.1 color space.
+ – Tuple (4 items).
+    - <code><strong>#0</strong>: integer</code> (`u8`) – The red color component.
+    - <code><strong>#1</strong>: integer</code> (`u8`) – The green color component.
+    - <code><strong>#2</strong>: integer</code> (`u8`) – The blue color component.
+    - <code><strong>#3</strong>: integer</code> (`u8`) – The alpha color component.
+- <a name="spec-glyphs-1-colorLabel"></a><code><strong>colorLabel</strong></code> One of 2 options.
+    - Option. `integer` (`u8`) – The index of the color label. See also [the handbook entry on color labels](https://handbook.glyphsapp.com/glyph/#glyph/color-label).
+    - Option. `array` – An RGB color with an alpha channel in the sRGB IEC61966-2.1 color space. See [`color`](#spec-glyphs-1-color).
+- <a name="spec-glyphs-1-component"></a><code><strong>component</strong>: object</code> – (`GSComponent`)
+    - <code><strong>alignment</strong>: integer = 0</code> (`i8`) – (`GSComponentAlignment`) – Controls the automatic alignment of the component.
+        - Possible values: `-2`, `-1`, `0`, `1`, `2`, `3`.
+    - <code><strong>anchor</strong>: string</code> – The name of the attachment anchor. Set to specify a specific anchor when there are multiple candidates.
+    - <code><strong>keepWeight</strong>: number = 0</code> (`f64`)
+    - <code><strong>locked</strong> = false</code> – Whether the component is locked.
+        - Possible values: `0`, `"0"`, `1`, `"1"`.
+    - <code><strong>name</strong>: string</code> ![required](https://img.shields.io/badge/required-204d7e) – The name of the component. See `ref` for current format versions.
+    - <code><strong>piece</strong>: object = {}</code> – The Smart Component settings of the component, mapping property names to values.
+        - <code>&lt;key&gt;: number</code> (`f64`)
+    - <code><strong>userData</strong>: object = {}</code> – Custom data associated with the component. See `attr` for current format versions. See [`userData`](#spec-glyphs-1-userData).
+    - <code><strong>transform</strong>: string</code> – The transformation matrix of the image (m11, m12, m21, m22, tX, tY). Examples: `"{1, 0, 0, 1, 0, 0}"`, `"{0.5, 0, 0, 0.5, 0, 0}"`.
+- <a name="spec-glyphs-1-customParameter"></a><code><strong>customParameter</strong>: object</code> – (`GSCustomParameter`)
+    - <code><strong>disabled</strong> = false</code> – Whether the custom parameter is disabled.
+        - Possible values: `0`, `"0"`, `1`, `"1"`.
+    - <code><strong>name</strong>: string</code> ![required](https://img.shields.io/badge/required-204d7e) – The name of the custom parameter.
+    - <code><strong>value</strong></code> ![required](https://img.shields.io/badge/required-204d7e) – The value of the custom parameter.
+- <a name="spec-glyphs-1-displayStrings"></a><code><strong>displayStrings</strong>: array</code>
+    - <code><strong>#n</strong>: string</code>
+- <a name="spec-glyphs-1-featurePrefix"></a><code><strong>featurePrefix</strong>: object</code> – (`GSFeaturePrefix`)
+    - <code><strong>automatic</strong> = false</code> – Whether the code of the feature prefix is generated automatically.
+        - Possible values: `0`, `"0"`, `1`, `"1"`.
+    - <code><strong>code</strong>: string = ""</code> – The code of the feature prefix. Example: `"languagesystem DFLT dflt;"`.
+    - <code><strong>disabled</strong> = false</code> – Whether the feature prefix is disabled.
+        - Possible values: `0`, `"0"`, `1`, `"1"`.
+    - <code><strong>name</strong>: string</code> ![required](https://img.shields.io/badge/required-204d7e) – The name of the feature prefix. Example: `"Languagesystems"`.
+    - <code><strong>notes</strong>: string = ""</code> – A string serving as a description or comment about the feature prefix.
+- <a name="spec-glyphs-1-feature"></a><code><strong>feature</strong>: object</code> – (`GSFeature`)
+    - <code><strong>automatic</strong> = false</code> – Whether the code of the feature is generated automatically.
+        - Possible values: `0`, `"0"`, `1`, `"1"`.
+    - <code><strong>code</strong>: string = ""</code> ![required](https://img.shields.io/badge/required-204d7e) – The code of the feature. Example: `"sub a by a.alt;"`.
+    - <code><strong>disabled</strong> = false</code> – Whether the feature is disabled.
+        - Possible values: `0`, `"0"`, `1`, `"1"`.
+    - <code><strong>name</strong>: string</code> – The four-letter tag of the feature. Example: `"calt"`.
+    - <code><strong>notes</strong>: string = ""</code> – A string serving as a description or comment about the feature.
+- <a name="spec-glyphs-1-fontMaster"></a><code><strong>fontMaster</strong>: object</code> – (`GSFontMaster`)
+    - <code><strong>active</strong> = true</code> – Whether the master is active.
+        - Possible values: `0`, `"0"`, `1`, `"1"`.
+    - <code><strong>alignmentZones</strong>: array = []</code> – The alignment zones of the master.
+        - <code><strong>#n</strong>: string</code> Examples: `"{0, -10}"`, `"{700, 16}"`.
+    - <code><strong>ascender</strong>: number</code> (`f64`) ![required](https://img.shields.io/badge/required-204d7e) – The ascender metric of the master.
+    - <code><strong>capHeight</strong>: number</code> (`f64`) ![required](https://img.shields.io/badge/required-204d7e) – The cap height metric of the master.
+    - <code><strong>custom</strong>: string</code> – The custom name of the master.
+    - <code><strong>customValue</strong>: number</code> (`f64`) – The location on the custom axis of the master.
+    - <code><strong>customValue1</strong>: number</code> (`f64`) – The location on the first custom axis of the master.
+    - <code><strong>customValue2</strong>: number</code> (`f64`) – The location on the second custom axis of the master.
+    - <code><strong>customValue3</strong>: number</code> (`f64`) – The location on the third custom axis of the master.
+    - <code><strong>customParameters</strong>: array = []</code> – The custom parameters of the master.
+        - <code><strong>#n</strong>: object</code> See [`customParameter`](#spec-glyphs-1-customParameter).
+    - <code><strong>descender</strong>: number</code> (`f64`) ![required](https://img.shields.io/badge/required-204d7e) – The descender metric of the master.
+    - <code><strong>guideLines</strong>: array = []</code> – The global guides of the master.
+        - <code><strong>#n</strong>: object</code> See [`guide`](#spec-glyphs-1-guide).
+    - <code><strong>horizontalStems</strong>: array = []</code> – The horizontal stems of the master.
+        - <code><strong>#n</strong>: number</code> (`f64`)
+    - <code><strong>iconName</strong>: string = "Regular"</code> – The name of the icon that represents the master. Generally omitted when equal to `Regular`, or equal to the default icon name of the master (`GSFontMaster.defaultIconName`).
+    - <code><strong>id</strong>: string</code> ![required](https://img.shields.io/badge/required-204d7e) – The unique identifier of the master.
+    - <code><strong>italicAngle</strong>: number = 0</code> (`f64`) – The italic angle of the master in degrees clockwise.
+    - <code><strong>name</strong>: string</code> – The name of the master. May be omitted in file format version 1 when equal to `Regular` or the default master name.
+    - <code><strong>userData</strong>: object = {}</code> – Custom data associated with the master. See [`userData`](#spec-glyphs-1-userData).
+    - <code><strong>verticalStems</strong>: array = []</code> – The vertical stems of the master.
+        - <code><strong>#n</strong>: number</code> (`f64`)
+    - <code><strong>visible</strong> = true</code> – Whether the master is visible in the preview.
+        - Possible values: `0`, `"0"`, `1`, `"1"`.
+    - <code><strong>weight</strong>: string = "Regular"</code> – The weight name of the master.
+    - <code><strong>weightValue</strong>: number</code> (`f64`) – The location on the weight axis of the master.
+    - <code><strong>width</strong>: string = "Regular"</code> – The width name of the master.
+    - <code><strong>widthValue</strong>: number</code> (`f64`) – The location on the width axis of the master.
+    - <code><strong>xHeight</strong>: number</code> (`f64`) ![required](https://img.shields.io/badge/required-204d7e) – The x-height metric of the master.
+- <a name="spec-glyphs-1-glyph"></a><code><strong>glyph</strong>: object</code> – (`GSGlyph`)
+    - <code><strong>bottomKerningGroup</strong>: string</code> – The bottom kerning group of the glyph.
+    - <code><strong>bottomMetricsKey</strong>: string</code> – The bottom metrics key of the glyph.
+    - <code><strong>category</strong>: string</code> – The category of the glyph. If unset, then the category is based on a glyph data lookup based on the glyph name.
+    - <code><strong>color</strong></code> – The color label of the glyph. See [`colorLabel`](#spec-glyphs-1-colorLabel).
+    - <code><strong>export</strong> = true</code> – Whether the glyph is exported.
+        - Possible values: `0`, `"0"`, `1`, `"1"`.
+    - <code><strong>glyphname</strong>: string</code> ![required](https://img.shields.io/badge/required-204d7e) – The name of the glyph.
+    - <code><strong>lastChange</strong>: string</code> – The date and time of the last change of the glyph. Example: `"2023-02-25 14:46:49 +0000"`.
+    - <code><strong>layers</strong>: array</code> – The layers of the glyph.
+        - <code><strong>#n</strong>: object</code> See [`layer`](#spec-glyphs-1-layer).
+    - <code><strong>leftKerningGroup</strong>: string</code> – The left kerning group of the glyph for LTR direction or the right kerning group of the glyph for RTL direction.
+    - <code><strong>leftMetricsKey</strong>: string</code> – The left metrics key of the glyph.
+    - <code><strong>locked</strong> = false</code> – Whether the glyph is locked.
+        - Possible values: `0`, `"0"`, `1`, `"1"`.
+    - <code><strong>note</strong>: string = ""</code> – A string serving as a description or comment about the glyph.
+    - <code><strong>partsSettings</strong>: array = []</code> – A list of the Smart Glyph properties and their top/bottom values.
+        - <code><strong>#n</strong>: object</code> See [`partProperty`](#spec-glyphs-1-partProperty).
+    - <code><strong>production</strong>: string</code> – The production name of the glyph. If unset, then the production name is based on a glyph data lookup based on the glyph name or the Unicode code point.
+    - <code><strong>rightKerningGroup</strong>: string</code> – The right kerning group of the glyph for LTR direction or the left kerning group of the glyph for RTL direction.
+    - <code><strong>rightMetricsKey</strong>: string</code> – The right metrics key of the glyph.
+    - <code><strong>script</strong>: string</code> – The script of the glyph. If unset, then the script is based on a glyph data lookup based on the glyph name.
+    - <code><strong>subCategory</strong>: string</code> – The subcategory of the glyph. If unset, then the subcategory is based on a glyph data lookup based on the glyph name.
+    - <code><strong>topKerningGroup</strong>: string</code> – The top kerning group of the glyph.
+    - <code><strong>topMetricsKey</strong>: string</code> – The top metrics key of the glyph.
+    - <code><strong>unicode</strong></code> – The Unicode code points of the glyph. One of 2 options.
+        - Option. `string` – A comma-separated list of hexadecimal code point values. Examples: `"0041"`, `"1E900"`, `"0000"`, `"0041,0061"`.
+        - Option. `integer` (`u32`) – A code point encoded as a hexadecimal number and decoded as a decimal number. This is a syntax issue in version 1 files where a hexadecimal value encoded as an unquoted string can be ambiguous.
+    - <code><strong>userData</strong>: object = {}</code> – Custom data associated with the glyph. See [`userData`](#spec-glyphs-1-userData).
+    - <code><strong>vertWidthMetricsKey</strong>: string</code> – The vertical width metrics key of the glyph.
+    - <code><strong>widthMetricsKey</strong>: string</code> – The width metrics key of the glyph.
+- <a name="spec-glyphs-1-guide"></a><code><strong>guide</strong>: object</code> – (`GSGuide`)
+    - <code><strong>alignment</strong>: string = "left"</code> – The alignment of the guide. Renamed to `orientation` in later versions. See [`orientation`](#spec-glyphs-1-orientation).
+        - Possible values: `"left"`, `"center"`, `"right"`.
+    - <code><strong>angle</strong>: number = 0</code> (`f64`) – The angle at which the guide is drawn in degrees clockwise.
+    - <code><strong>filter</strong>: string</code> – The filter of the guide. The syntax is the description of [NSPredicate](https://developer.apple.com/documentation/foundation/nspredicate). Omitted when no filter is defined.
+    - <code><strong>grid</strong>: number = 0</code> (`f64`) – The grid of the guide.
+    - <code><strong>length</strong>: number = 0</code> (`f64`) – The length of a line-type guide.
+    - <code><strong>lockAngle</strong> = false</code> – Whether the angle of the guide is locked.
+        - Possible values: `0`, `"0"`, `1`, `"1"`.
+    - <code><strong>locked</strong> = false</code> – Whether the guide is locked.
+        - Possible values: `0`, `"0"`, `1`, `"1"`.
+    - <code><strong>name</strong>: string = ""</code> – The name of the guide.
+    - <code><strong>position</strong>: string</code> ![required](https://img.shields.io/badge/required-204d7e) – The position of the guide. See [`legacyPosition`](#spec-glyphs-1-legacyPosition). Examples: `"{0, 50}"`, `"{-30.5, 600}"`.
+    - <code><strong>showMeasurement</strong> = false</code> – Whether the measurement of the guide is shown.
+        - Possible values: `0`, `"0"`, `1`, `"1"`.
+    - <code><strong>userData</strong>: object = {}</code> – Custom data associated with the guide. See [`userData`](#spec-glyphs-1-userData).
+- <a name="spec-glyphs-1-hint"></a><code><strong>hint</strong>: object</code> – (`GSHint`)
+    - <code><strong>horizontal</strong> = false</code> – Whether the hint is horizontal. Not written for path components.
+        - Possible values: `0`, `"0"`, `1`, `"1"`.
+    - <code><strong>name</strong>: string</code> – The name of the hint.
+    - <code><strong>options</strong>: number = 0</code> (`u32`) – The options of the hint.
+    - <code><strong>origin</strong>: string</code> – The origin of the hint. See [`indexPath`](#spec-glyphs-1-indexPath). Examples: `"{0, 1}"`, `"{lsb}"`, `"{rsb}"`.
+    - <code><strong>other1</strong>: string</code> – The first other point of the hint, used by TrueType instructions that need more than two nodes. See [`indexPath`](#spec-glyphs-1-indexPath). Examples: `"{0, 1}"`, `"{lsb}"`, `"{rsb}"`.
+    - <code><strong>other2</strong>: string</code> – The second other point of the hint, used by TrueType instructions that need more than three nodes. See [`indexPath`](#spec-glyphs-1-indexPath). Examples: `"{0, 1}"`, `"{lsb}"`, `"{rsb}"`.
+    - <code><strong>place</strong>: string</code> See [`legacyPosition`](#spec-glyphs-1-legacyPosition). Examples: `"{0, 50}"`, `"{-30.5, 600}"`.
+    - <code><strong>scale</strong>: string = "{1, 1}"</code> – The scale of the hint. Examples: `"{2, 2}"`, `"{1.2, 1.2}"`.
+    - <code><strong>settings</strong>: object</code> – The settings of the hint.
+    - <code><strong>stem</strong>: number</code> (`i32`) – The stem of the hint.
+    - <code><strong>target</strong>: string</code> See [`indexPath`](#spec-glyphs-1-indexPath). Examples: `"{0, 1}"`, `"{lsb}"`, `"{rsb}"`.
+    - <code><strong>type</strong>: string</code> ![required](https://img.shields.io/badge/required-204d7e) – The type of the hint.
+        - Possible values: `"TopGhost"`, `"BottomGhost"`, `"Stem"`, `"Flex"`, `"TTStem"`, `"Align"`, `"Anchor"`, `"Interpolate"`, `"Diagonal"`, `"Delta"`, `"Tag"`, `"Corner"`, `"Cap"`, `"Brush"`, `"Segment"`, `"Auto"`, `"Unknown"`.
+- <a name="spec-glyphs-1-image"></a><code><strong>image</strong>: object</code> – (`GSImage`)
+    - <code><strong>alpha</strong>: number = 100</code> (`f64`) – The alpha value of the image.
+    - <code><strong>crop</strong>: string</code> – The cropped frame of the image, specified as the crop origin X/Y and size width/height. Examples: `"{{0, 0}, {100, 100}}"`, `"{{-10, -10}, {90, 90}}"`.
+    - <code><strong>imagePath</strong>: string</code> – The file path of the image file relative to the document file.
+    - <code><strong>imageURL</strong>: string</code> – The URL bookmark data of the image file path.
+    - <code><strong>locked</strong> = false</code> – Whether the image is locked.
+        - Possible values: `0`, `"0"`, `1`, `"1"`.
+    - <code><strong>transform</strong>: string</code> – The transformation matrix of the image (m11, m12, m21, m22, tX, tY). Examples: `"{1, 0, 0, 1, 0, 0}"`, `"{0.5, 0, 0, 0.5, 0, 0}"`.
+- <a name="spec-glyphs-1-instance"></a><code><strong>instance</strong>: object</code> – (`GSInstance`)
+    - <code><strong>axesValues</strong>: array</code> – The internal axis locations of the instance. These values are also used for the external axis locations, if no external axis locations are specified separately.
+        - <code><strong>#n</strong>: number</code> (`f64`)
+    - <code><strong>customParameters</strong>: array = []</code> – The custom parameters of the instance.
+        - <code><strong>#n</strong>: object</code> See [`customParameter`](#spec-glyphs-1-customParameter).
+    - <code><strong>exports</strong> = true</code> – Whether the instance is exported.
+        - Possible values: `0`, `"0"`, `1`, `"1"`.
+    - <code><strong>interpolationCustom</strong>: number</code> (`f64`) – The interpolation value of the third axis.
+    - <code><strong>interpolationCustom1</strong>: number</code> (`f64`) – The interpolation value of the fourth axis.
+    - <code><strong>interpolationCustom2</strong>: number</code> (`f64`) – The interpolation value of the fifth axis.
+    - <code><strong>interpolationCustom3</strong>: number</code> (`f64`) – The interpolation value of the sixth axis.
+    - <code><strong>interpolationWeight</strong>: number</code> (`f64`) – The interpolation value of the weight axis (first axis).
+    - <code><strong>interpolationWidth</strong>: number</code> (`f64`) – The interpolation value of the width axis (second axis).
+    - <code><strong>instanceInterpolations</strong>: object = {}</code> – The interpolation factors where the keys are the master IDs.
+        - <code>&lt;key&gt;</code> One of 2 options.
+            - Option. `number` (`f64`) – The X and Y factors are the same.
+            - Option. `string` Examples: `"{1, 1}"`, `"{0.5, 0.5}"`.
+    - <code><strong>isBold</strong> = false</code> – Whether the instance is bold.
+        - Possible values: `0`, `"0"`, `1`, `"1"`.
+    - <code><strong>isItalic</strong> = false</code> – Whether the instance is italic.
+        - Possible values: `0`, `"0"`, `1`, `"1"`.
+    - <code><strong>linkStyle</strong>: string</code> – The name of the style-linked instance.
+    - <code><strong>manualInterpolation</strong> = false</code> – Whether the `instanceInterpolations` values are used. Otherwise, the values are calculated from the axis values.
+        - Possible values: `0`, `"0"`, `1`, `"1"`.
+    - <code><strong>name</strong>: string</code> – The style name of the instance. Examples: `"Regular"`, `"Bold"`, `"Italic"`, `"Bold Italic"`.
+    - <code><strong>userData</strong>: object = {}</code> – Custom data associated with the instance. See [`userData`](#spec-glyphs-1-userData).
+    - <code><strong>weightClass</strong>: string = "Regular"</code> – The weight class of the instance.
+        - Possible values: `"Thin"`, `"ExtraLight"`, `"Light"`, `"Regular"`, `"Medium"`, `"SemiBold"`, `"Bold"`, `"ExtraBold"`, `"Black"`.
+    - <code><strong>widthClass</strong>: string = "Medium (normal)"</code> – The width class of the instance.
+        - Possible values: `"Ultra Condensed"`, `"Extra Condensed"`, `"Condensed"`, `"SemiCondensed"`, `"Medium (normal)"`, `"Medium"`, `"Semi Expanded"`, `"Expanded"`, `"Extra Expanded"`, `"Ultra Expanded"`.
+- <a name="spec-glyphs-1-indexPath"></a><code><strong>indexPath</strong>: string</code> Examples: `"{0, 1}"`, `"{lsb}"`, `"{rsb}"`.
+- <a name="spec-glyphs-1-kerning"></a><code><strong>kerning</strong>: object = {}</code> – Maps master IDs to kerning definitions.
+    - <code>&lt;key&gt;: object</code> – Maps glyph names or class names to kerning partners.
+        - <code>&lt;key&gt;: object</code> – Maps glyph names or class names to kerning values.
+            - <code>&lt;key&gt;: number</code> (`f64`)
+- <a name="spec-glyphs-1-layer"></a><code><strong>layer</strong>: object</code> – (`GSLayer`)
+    - <code><strong>anchors</strong>: array = []</code> – The anchors of the layer.
+        - <code><strong>#n</strong>: object</code> See [`anchor`](#spec-glyphs-1-anchor).
+    - <code><strong>annotations</strong>: array = []</code> – The annotations of the layer.
+        - <code><strong>#n</strong>: object</code> See [`annotation`](#spec-glyphs-1-annotation).
+    - <code><strong>associatedMasterId</strong>: string</code> – The unique identifier of the associated master. Omitted when equalt to the layer ID.
+    - <code><strong>background</strong>: object</code>
+        - <code><strong>anchors</strong>: array = []</code> – The anchors of the background layer.
+            - <code><strong>#n</strong>: object</code> See [`anchor`](#spec-glyphs-1-anchor).
+        - <code><strong>annotations</strong>: array = []</code> – The annotations of the background layer.
+            - <code><strong>#n</strong>: object</code> See [`annotation`](#spec-glyphs-1-annotation).
+        - <code><strong>backgroundImage</strong>: object</code> – The background image of the layer. See [`image`](#spec-glyphs-1-image).
+        - <code><strong>components</strong>: array = []</code> – The components of the background layer.
+            - <code><strong>#n</strong>: object</code> See [`component`](#spec-glyphs-1-component).
+        - <code><strong>guideLines</strong>: array = []</code> – The guides of the background layer.
+            - <code><strong>#n</strong>: object</code> See [`guide`](#spec-glyphs-1-guide).
+        - <code><strong>hints</strong>: array = []</code> – The hints of the background layer.
+            - <code><strong>#n</strong>: object</code> See [`hint`](#spec-glyphs-1-hint).
+        - <code><strong>paths</strong>: array = []</code> – The paths of the background layer.
+            - <code><strong>#n</strong>: object</code> See [`path`](#spec-glyphs-1-path).
+    - <code><strong>backgroundImage</strong>: object</code> – The background image of the layer. See [`image`](#spec-glyphs-1-image).
+    - <code><strong>color</strong></code> – The color label of the layer. See [`colorLabel`](#spec-glyphs-1-colorLabel).
+    - <code><strong>components</strong>: array = []</code> – The components of the layer.
+        - <code><strong>#n</strong>: object</code> See [`component`](#spec-glyphs-1-component).
+    - <code><strong>guideLines</strong>: array = []</code> – The guides of the layer.
+        - <code><strong>#n</strong>: object</code> See [`guide`](#spec-glyphs-1-guide).
+    - <code><strong>hints</strong>: array = []</code> – The hints of the layer.
+        - <code><strong>#n</strong>: object</code> See [`hint`](#spec-glyphs-1-hint).
+    - <code><strong>layerId</strong>: string</code> ![required](https://img.shields.io/badge/required-204d7e) – The unique ID of the layer. Matches the master ID when the layer is a master layer.
+    - <code><strong>leftMetricsKey</strong>: string</code> – The left metrics key of the layer.
+    - <code><strong>rightMetricsKey</strong>: string</code> – The right metrics key of the layer.
+    - <code><strong>widthMetricsKey</strong>: string</code> – The width metrics key of the layer.
+    - <code><strong>name</strong>: string = ""</code> – The name of the layer. Master layers and other special layers display a name in the Glyphs UI that is derived from the layers role (for example, the name of the master that the layer belongs to). These derived names are not written to the file. Instead, this name is only displayed in the UI for non-special layers (like backup layers).
+    - <code><strong>paths</strong>: array = []</code> – The paths of the layer.
+        - <code><strong>#n</strong>: object</code> See [`path`](#spec-glyphs-1-path).
+    - <code><strong>userData</strong>: object = {}</code> – Custom data associated with the layer. See [`userData`](#spec-glyphs-1-userData).
+    - <code><strong>visible</strong> = false</code> – Whether the layer is visible.
+        - Possible values: `0`, `"0"`, `1`, `"1"`.
+    - <code><strong>width</strong>: number = 0</code> (`f64`) ![required](https://img.shields.io/badge/required-204d7e) – The width of the layer.
+- <a name="spec-glyphs-1-legacyPosition"></a><code><strong>legacyPosition</strong>: string</code> Examples: `"{0, 50}"`, `"{-30.5, 600}"`.
+- <a name="spec-glyphs-1-metric"></a><code><strong>metric</strong>: object</code> – (`GSMetric`)
+    - <code><strong>filter</strong>: string</code> – The filter of the metric limiting the scope of the metric to a subset of glyphs.
+    - <code><strong>horizontal</strong> = false</code> – Whether the metric is a horizontal metric.
+        - Possible values: `0`, `"0"`, `1`, `"1"`.
+    - <code><strong>name</strong>: string</code> – The name of the metric.
+    - <code><strong>type</strong>: string</code> – The type of the metric.
+        - Possible values: `"ascender"`, `"cap height"`, `"slant height"`, `"x-height"`, `"midHeight"`, `"topHeight"`, `"bodyHeight"`, `"descender"`, `"baseline"`, `"italic angle"`, `"italic slope"`.
+- <a name="spec-glyphs-1-node"></a><code><strong>node</strong>: string</code> – (`GSNode`) Examples: `"0 0 MOVE"`, `"-50 100 LINE"`, `"100 100 CURVE SMOOTH"`, `"200 -60 OFFCURVE"`.
+- <a name="spec-glyphs-1-infoProperty"></a><code><strong>infoProperty</strong></code> – (`GSInfoProperty`) One of 2 options.
+    - Option. `object`
+        - <code><strong>key</strong>: string</code> ![required](https://img.shields.io/badge/required-204d7e) – The key of the property.
+        - <code><strong>value</strong></code> ![required](https://img.shields.io/badge/required-204d7e) – The value of the property.
+    - Option. `object`
+        - <code><strong>key</strong>: string</code> ![required](https://img.shields.io/badge/required-204d7e) – The key of the property.
+        - <code><strong>values</strong>: array</code> ![required](https://img.shields.io/badge/required-204d7e) – The values of the property.
+            - <code><strong>#n</strong>: object</code> See [`infoValue`](#spec-glyphs-1-infoValue).
+- <a name="spec-glyphs-1-infoValue"></a><code><strong>infoValue</strong>: object</code> – (`GSInfoValue`)
+    - <code><strong>language</strong>: string</code> ![required](https://img.shields.io/badge/required-204d7e) – The language tag of the string value. The tag is based on the [OpenType Language System Tags](https://learn.microsoft.com/en-us/typography/opentype/spec/languagetags) but omitts trailing whitespace. Examples: `"dflt"`, `"DEU"`.
+    - <code><strong>value</strong>: string</code> ![required](https://img.shields.io/badge/required-204d7e) – The localized string value.
+- <a name="spec-glyphs-1-orientation"></a><code><strong>orientation</strong>: string</code> – (`GSElementOrientation`)
+    - Possible values: `"left"`, `"center"`, `"right"`.
+- <a name="spec-glyphs-1-partProperty"></a><code><strong>partProperty</strong>: object</code> – (`GSPartProperty`)
+    - <code><strong>bottomName</strong>: string</code> – The name of the bottom value of the property. (Unused)
+    - <code><strong>bottomValue</strong>: integer</code> (`i32`) – The lower end of the value range of the property.
+    - <code><strong>name</strong>: string</code> – The name of the property.
+    - <code><strong>topName</strong>: string</code> – The name of the top value of the property. (Unused)
+    - <code><strong>topValue</strong>: integer</code> (`i32`) – The upper end of the value range of the property.
+- <a name="spec-glyphs-1-path"></a><code><strong>path</strong>: object</code> – (`GSPath`)
+    - <code><strong>closed</strong></code> ![required](https://img.shields.io/badge/required-204d7e) – Whether the path is closed.
+        - Possible values: `0`, `"0"`, `1`, `"1"`.
+    - <code><strong>nodes</strong>: array</code> ![required](https://img.shields.io/badge/required-204d7e) – The on- and off-curve nodes of the path.
+        - <code><strong>#n</strong>: string</code> See [`node`](#spec-glyphs-1-node). Examples: `"0 0 MOVE"`, `"-50 100 LINE"`, `"100 100 CURVE SMOOTH"`, `"200 -60 OFFCURVE"`.
+- <a name="spec-glyphs-1-pos"></a><code><strong>pos</strong>: array</code>
+ – Tuple (2 items).
+    - <code><strong>#0</strong>: number</code> (`f64`) – The x-coordinate of the position.
+    - <code><strong>#1</strong>: number</code> (`f64`) – The y-coordinate of the position.
+- <a name="spec-glyphs-1-scale"></a><code><strong>scale</strong>: array</code>
+ – Tuple (2 items).
+    - <code><strong>#0</strong>: number</code> (`f64`) – The horizontal scale factor.
+    - <code><strong>#1</strong>: number</code> (`f64`) – The vertical scale factor.
+- <a name="spec-glyphs-1-shape"></a><code><strong>shape</strong></code> – (`GSShape`) One of 2 options.
+    - Option. `object` See [`path`](#spec-glyphs-1-path).
+    - Option. `object` See [`component`](#spec-glyphs-1-component).
+- <a name="spec-glyphs-1-size"></a><code><strong>size</strong>: array</code>
+ – Tuple (2 items).
+    - <code><strong>#0</strong>: number</code> (`f64`) – The width.
+    - <code><strong>#1</strong>: number</code> (`f64`) – The height.
+- <a name="spec-glyphs-1-slant"></a><code><strong>slant</strong>: array</code>
+ – Tuple (2 items).
+    - <code><strong>#0</strong>: number</code> (`f64`) – The horizontal slant factor.
+    - <code><strong>#1</strong>: number</code> (`f64`) – The vertical slant factor.
+- <a name="spec-glyphs-1-userData"></a><code><strong>userData</strong>: object</code>
 
 ## Changes
+
+### 14. Jan. 2025
+
+- Reworked JSON Schemas and added variants for package and autosave files.
+- Expanded descriptions and annotations for most values.
+
 ### 1. Oct. 2018:
+
 - Add Notes about special cases
 - Better general explanation
 
 ### 21. April 2018:
+
 - Add .appVersion, disablesNiceNames, customValue, weight, width, custom
 - Fix typos: paths, widthValue
 
 ### 4. Feb. 2016:
+
 - added hints
 - updated and added a few field in layers
-
-## Notes
-- It is written without indentation. That is to save file size.
-- Each key needs to be on its own line.
-- Lists have each element on one line, empty `lists` or `dicts` need to span two lines.
-    * except: color list, they are all on one line.
-- empty elements are always omitted.
-    * except: in `userData` entires. There the structure is preserved.
-- Numbers are always written without quotes (negative and float). Strings that look like numbers are written with quotes (mostly important in userData).
-- Boolean values are written as integers `0` or `1`. The entry is not present if the value is the default value for the field. Generally the default for a boolean field is false, but there are some cases noted below where the default is true.
-- Unicodes are written as hex string but always without quotes so it might be ambiguous for a general parser ('1234' could be read as int or hex)
-- The last element in a list doesn’t get a trailing comma.
-
-## Top Level Elements
-The XML file contains a dictionary with the following structure. The elements with child elements are usually a `list` of `dict` elements.
-
-* .appVersion `string`
-* DisplayStrings `list`
-* classes `list`: OpenType classes.
-    * automatic `bool`
-    * code `string`: A string containing space separated glyph names.
-    * disabled `bool`: If true, the class will not be exported.
-    * name `string`: The OpenType class name.
-    * notes `string`: Notes.
-* copyright `string`
-* customParameters `list`: Font-wide custom parameters.
-    * name `string`: Property name of the custom parameter.
-    * value `string`: Value of the custom parameters.
-* date `string`: Format `2014-01-29 14:14:38 +0000`.
-* designer `string`
-* designerURL `string`
-* disablesAutomaticAlignment `bool`
-* disablesNiceNames `bool`
-* familyName `string`
-* featurePrefixes `list`: OpenType feature code before the class definitions.
-    * automatic `bool`
-    * code `string`: A string containing feature code.
-    * disabled `bool`: The prefix will not be exported.
-    * name `string`: The name of the prefix
-    * notes `string`: Notes.
-* features `list`
-    * automatic `bool`
-    * code `string`: a string containing feature code.
-    * disabled `bool`: The feature will not be exported.
-    * name `string`: the feature tag.
-    * notes `string`: The feature notes. For stylistic sets, the note can contain a `featureNames` definition or a `Name:` + feature name
-* fontMaster `list`
-    * alignmentZones `list`: list of position and overshot in a string with curly braces (e.g. `"{800, 15}"`)
-    * ascender `int`
-    * capHeight `int`
-    * custom `string` : All other parts of the master name that doesn’t fit into `weight` or `width`
-    * customValue `int`: axis position for the third axis. Not present if the value is the default `0`.
-    * customValue1 `int`: axis position for the fourth axis. Not present if the value is the default `0`.
-    * customValue2 `int`: axis position for the fifth axis. Not present if the value is the default `0`.
-    * customValue3 `int`: axis position for the sixth axis. Not present if the value is the default `0`.
-    * customParameters `list`: Master-wide custom parameters.
-        * name `string`: Property name of the custom parameter.
-        * value `string`: Value of the custom parameter.
-    * descender `int`: is always negative.
-    * horizontalStems `list`: a list of `int` values.
-    * iconName `string`: stores the selected master icon (new in v2.5)
-    * id `string` a unique id that connects the layers (associated ID) with the master.
-    * italicAngle `int`: italic angle in degrees. Positive is clockwise (forward slant).
-    * userData `dict` to store custom data. Only `string`, `int`, `float`, `array`, `dict` and `date` data is allowed.
-    * verticalStems `list`: a list of `int` values.
-    * visible `bool`: Defaults to *true* if not present.
-    * weight `string` : The weight part of the master name. Possible values "SemiLight", "Light", "SemiBold", "Bold"
-    * weightValue `int`: The weight position for interpolation. Not present if the value is the default `100`.
-    * width `string` : The width part of the master name. Possible values "SemiCondensed", "Condensed", "SemiExtended", "Extended"
-    * widthValue `int`: The width position for interpolation. Not present if the value is the default `100`.
-    * xHeight `int`
-* glyphs `list`
-    * glyphname `string`: Must be unique throughout the font.
-    * export `bool`
-    * production `string`: manually set production name (new in v2.2)
-    * script `string`: manually set script (new in v2.2)
-    * category `string`: manually set category (new in v2.2)
-    * color `int` or `list`:
-        1. If `int`, it is the index of the internal color list
-        2. If `list`, four numbers in the range of 0–255 denoting a RGBA value
-    * subcategory `string`: manually set subcategory (new in v2.2)
-    * lastChange `string`: Format `2014-01-29 14:14:38 +0000`.
-    * layers `list`
-        * anchors `list`
-            * name `string`: The name of the anchor.
-            * position `string`: format `{X, Y}`
-        * annotations `list>dict`
-        * associatedMasterId `string`: ID of the master the layer is linked to. Not present if it equals layerID, i.e. if the layer is in use as master.
-        * background `dict`: Contains the same children as the layer itself, except for background, layerId and associatedMasterId.
-        * backgroundImage `dict`: a image.
-            * crop `string`: Portion of the image to show in pixels, format: `{{t,l},{b,r}}`
-            * imagePath `string`: The file path to the image. It is stored relative if close enough. Otherwise the full path.
-            * locked `bool`
-            * transform `string`: An affine transformation matrix, format: `{m11, m12, m21, m22, tX, tY}`.
-        * components `list`
-            * anchor `string`: Should be indicated if connected to an anchor, especially if more than one possibility is available, e.g. in ligatures.
-            * name `string`: The name of the linked glyph (i.e., the glyph the component is pointing to).
-            * transform `string`: An affine transformation matrix, format: `{m11, m12, m21, m22, tX, tY}`.
-            * alignment `int`: controls the automatic alignment of this component. (-1 disables alignment, 1 forces it for glyph that are usually not aligned)
-            * disableAlignment `bool`: This component should not be automatically aligned. (not used since version 2.3-826)
-        * guideLines `list`
-            * alignment `string`: If the guide is `right` or `center` aligned. Default: `left`
-            * angle `float`: The angle. If not set defaults to 0°
-            * locked `bool`
-            * showMeasurement `bool`
-            * position `string`: format `{X, Y}`
-        * hints `list`
-            * horizontal `int`: If set, the hint is horizontal and vertical otherwise
-            * type `string`: The type of the hint. Possible value are: TTStem, TopGhost, BottomGhost, Anchor, Align, Interpolate, Diagonal, Tag, Corner, Cap
-                If there is no type, it defaults to Stem, of Ghost if `target` is set
-            * origin `string`: '{pathIndex, nodeIndex}'
-                TODO: Explain node indexes
-            * target `string`: `{pathIndex, nodeIndex}`, `up` or `down`
-            * other1 `string`: `{pathIndex, nodeIndex}` for TT Institutions that need more than two nodes (Interpolation, Diagonal)
-            * other2 `string`: `{pathIndex, nodeIndex}` for TT Institutions that need more than three nodes (Diagonal)
-            * scale `string`: `{scaleX, scaleY}` Only used for caps and corners
-            * stem `int`: if a stem is manually set
-            * options `int`: a bitfield for options
-        * layerId `string`
-        * leftMetricsKey `string`
-        * rightMetricsKey `string`
-        * widthMetricsKey `string`
-        * name `string`: The name of the layer. Only stored for none master layers (this is changed in 2.3, before the master names where stored)
-        * paths `list`
-            * closed `bool`
-            * nodes `list`: One entry per node. Format: `X Y TYPE [SMOOTH]`, where X and Y are the coordinates as float, and TYPE is either `LINE`, `CURVE` or `OFFCURVE`. After `LINE` and `CURVE`, you can additionally add a `SMOOTH`.
-        * userDate `dict`: A dict with user defined structure
-        * vertWidth `float`: Only stored if other than the default (ascender+descender)
-        * width `float`
-        * visible `bool`: Defaults to *true* if not present.
-    * leftKerningGroup `string`
-    * leftMetricsKey `string`
-    * rightKerningGroup `string`
-    * rightMetricsKey `string`
-    * unicode `string`: Hexadecimal Unicode value.
-* gridLength `int`: Only written if not `1`
-* gridSubDivision `int`: Only written if bigger then `1`
-* instances `list`
-    * customParameters `list`: Instance custom parameters.
-        * name `string`: Property name of the custom parameter.
-        * value `string`: Value of the custom parameters.
-    * exports `bool`: Defaults to *true* if not present.
-    * interpolationCustom `float`: axis position for the third axis
-    * interpolationCustom1 `float`: axis position for the fourth axis
-    * interpolationCustom2 `float`: axis position for the fifth axis
-    * interpolationCustom3 `float`: axis position for the sixth axis
-    * interpolationWeight `float`: axis position for the first axis
-    * interpolationWidth `float`: axis position for the second axis
-    * instanceInterpolations `dict`: keys are master IDs, values are the factors for that master.
-    * isBold `bool`: for style linking.
-    * isItalic `bool`: for style linking.
-    * linkStyle `string`: The linked style name
-    * manualInterpolation `bool`: If set, use the `instanceInterpolations`, otherwise calculate from `axisValues`.
-    * name `string`: The style name.
-    * userData `dict`: to store custom data. Only `string`, `int`, `float`, `array`, `dict` and `date` data is allowed.
-    * weightClass `string`:
-    * widthClass `string`:
-* keepAlternatesTogether: `bool`
-* kerning `dict`: three-level `dict` containing a `float` as value.
-    * first level key is the master ID.
-    * second level is either the left kerning group name or glyph name.
-    * third level is either the right kerning group name or glyph name.
-* vertKerning `dict`: see `kerning`
-* keyboardIncrement `float`: Only written if not `1`
-* manufacturer `string`
-* manufacturerURL `string`
-* unitsPerEm `int`
-* userData `dict`: to store custom data. Only `string`, `int`, `float`, `array`, `dict` and `date` data is allowed.
-* versionMajor `int`
-* versionMinor `int`: must be between 0 and 999.
-
