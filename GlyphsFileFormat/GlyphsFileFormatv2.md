@@ -22,7 +22,7 @@ This way, files can be viewed and edited in any text editor.
 - Some string values do not escape horizontal tab and line feed characters, instead using the literal characters.
   This improves readability.
 - Several values cannot be edited in isolation, as they are dependent on one another.
-  For example, when changing the ID of a master requires updating the associated master IDs of layers.
+  For example, changing the ID of a master requires updating the matching associated master ID of layers.
 - Empty dictionaries and arrays are generally omitted, except for values of a `userData` property where the structure is preserved.
 
 ## Syntax
