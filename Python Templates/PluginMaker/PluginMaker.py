@@ -165,7 +165,7 @@ class PluginMaker(NSObject):
 
 			xibFile = os.path.join(exportFilePath, "Contents/Resources/IBdialog.xib")
 			if os.path.exists(xibFile):
-				self.replacePlaceholders(pluginFile, replaceDict)
+				self.replacePlaceholders(xibFile, replaceDict)
 
 	@objc.IBAction
 	def showWindow_(self, sender):
