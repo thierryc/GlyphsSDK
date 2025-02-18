@@ -10,7 +10,7 @@
 
 @implementation ___FILEBASENAMEASIDENTIFIER___
 
-- (instancetype) init {
+- (instancetype)init {
 	self = [super init];
 	if (self) {
 		// do stuff
@@ -19,7 +19,7 @@
 }
 
 - (NSUInteger)interfaceVersion {
-	// Distinguishes the API verison the plugin was built for. Return 1.
+	// Distinguishes the API version the plugin was built for. Return 1.
 	return 1;
 }
 

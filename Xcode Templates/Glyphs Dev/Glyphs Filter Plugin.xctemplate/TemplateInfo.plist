@@ -28,7 +28,7 @@
 	<array>
 		<string>___PACKAGENAMEASIDENTIFIER___.h</string>
 		<string>___PACKAGENAMEASIDENTIFIER___.m</string>
-		<string>en.lproj/___PACKAGENAMEASIDENTIFIER___Dialog.xib</string>
+		<string>Base.lproj/___PACKAGENAMEASIDENTIFIER___Dialog.xib</string>
 	</array>
 	<key>Definitions</key>
 	<dict>
@@ -42,7 +42,7 @@
 			<key>Path</key>
 			<string>___PACKAGENAMEASIDENTIFIER___.m</string>
 		</dict>
-		<key>en.lproj/___PACKAGENAMEASIDENTIFIER___Dialog.xib</key>
+		<key>Base.lproj/___PACKAGENAMEASIDENTIFIER___Dialog.xib</key>
 		<dict>
 			<key>Path</key>
 			<string>___PACKAGENAMEASIDENTIFIER___Dialog.xib</string>

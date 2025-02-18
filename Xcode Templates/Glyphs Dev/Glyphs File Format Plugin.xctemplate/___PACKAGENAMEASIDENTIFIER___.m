@@ -26,7 +26,7 @@
 }
 
 - (NSUInteger)interfaceVersion {
-	// Distinguishes the API verison the plugin was built for. Return 1.
+	// Distinguishes the API version the plugin was built for. Return 1.
 	return 1;
 }
 
@@ -68,7 +68,7 @@
 - (void)exportFont:(GSFont *)font {
 	// Exprts a Font object.
 	// This function should ask the user for the place to save the store the font.
- 	// Eventually errors have to be presented by the plugin. Use `[font.parent presentError:error];`
+	// Eventually errors have to be presented by the plugin. Use `[font.parent presentError:error];`
 }
 
 @end

@@ -12,13 +12,14 @@
 
 @synthesize windowController;
 
-- (id) init {
+- (instancetype)init {
 	self = [super initWithNibName:@"___PACKAGENAMEASIDENTIFIER___View" bundle:[NSBundle bundleForClass:[self class]]];
+	[(GSPaletteView *)self.view setController:self];
 	return self;
 }
 
 - (NSUInteger)interfaceVersion {
-	// Distinguishes the API verison the plugin was built for. Return 1.
+	// Distinguishes the API version the plugin was built for. Return 1.
 	return 1;
 }
 
@@ -48,4 +49,5 @@
 - (NSView *)theView {
 	return [self view];
 }
+
 @end
