@@ -7,6 +7,7 @@
 //
 
 #import "___PACKAGENAMEASIDENTIFIER___.h"
+#import <GlyphsCore/GSPaletteView.h>
 
 @implementation ___FILEBASENAMEASIDENTIFIER___
 
@@ -28,12 +29,12 @@
 	return @"___PACKAGENAME___";
 }
 
-- (NSInteger)maxHeight {
-	return 265;
+- (NSInteger)minHeight {
+	return 85;
 }
 
-- (NSInteger)minHeight {
-	return 125;
+- (NSInteger)maxHeight {
+	return 265; // if this is bigger than minHeight, the palette is resizable
 }
 
 - (NSUInteger)currentHeight {

@@ -34,6 +34,7 @@ class ____PluginClassName____ (PalettePlugin):
 
 		# Load .nib dialog (without .extension)
 		self.loadNib('IBdialog', __file__)
+		self.dialog.setController_(self)
 
 	@objc.python_method
 	def start(self):
@@ -43,6 +44,12 @@ class ____PluginClassName____ (PalettePlugin):
 	@objc.python_method
 	def __del__(self):
 		Glyphs.removeCallback(self.update)
+
+	def minHeight(self):
+		return 85
+
+	def maxHeight(self):
+		return 85  # change this to something bigger to enable manually resizing of the palette
 
 	@objc.python_method
 	def update(self, sender):
