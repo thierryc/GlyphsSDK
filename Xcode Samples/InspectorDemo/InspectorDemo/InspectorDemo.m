@@ -27,7 +27,7 @@ static NSImage *_toolBarIcon = nil;
 }
 
 - (NSUInteger)interfaceVersion {
-	// Distinguishes the API verison the plugin was built for. Return 1.
+	// Distinguishes the API version the plugin was built for. Return 1.
 	return 1;
 }
 
@@ -108,7 +108,7 @@ static NSImage *_toolBarIcon = nil;
 }
 
 - (void) drawLayer:(GSLayer*)Layer atPoint:(NSPoint)aPoint asActive:(BOOL)Active attributes:(NSDictionary*)Attributes {
-	// Draw anythin for this particular layer.
+	// Draw anything for this particular layer.
 	[_editViewController.graphicView drawLayer:Layer atPoint:aPoint asActive:Active attributes:Attributes];
 }
 
