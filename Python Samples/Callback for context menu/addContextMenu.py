@@ -8,6 +8,7 @@ __doc__ = """
 from GlyphsApp import GSCallbackHandler
 from Cocoa import NSObject, NSMenuItem
 
+
 class ContextMenuCallback (NSObject):
 	def init(self):
 		print("__init")
@@ -26,5 +27,6 @@ class ContextMenuCallback (NSObject):
 
 	def menuAction_(self, sender):
 		print("__sender", sender, sender.representedObject())
+
 
 contextMenuAdder = ContextMenuCallback.new()

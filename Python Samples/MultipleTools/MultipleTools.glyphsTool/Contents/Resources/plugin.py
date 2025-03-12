@@ -73,7 +73,7 @@ class MultipleTools(SelectTool):
 
 			return theMenu
 		except Exception as e:
-			print(traceback.format_exc())
+			print(traceback.format_exc(), e)
 
 	def __file__(self):
 		"""Please leave this method unchanged"""

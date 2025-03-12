@@ -58,7 +58,7 @@ class SmileyPalette (PalettePlugin):
 			self._theImageView.setHidden_(True)
 		except Exception as e:
 			import traceback
-			self.logError(traceback.format_exc())
+			self.logError(traceback.format_exc(), e)
 
 	@objc.python_method
 	def __file__(self):
