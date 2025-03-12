@@ -40,7 +40,14 @@ class PluginWithWindow(GeneralPlugin):
 
 	@objc.python_method
 	def start(self):
-		newMenuItem = NSMenuItem(self.name, self.showWindow_)
+		if Glyphs.buildNumber >= 3320:
+			from GlyphsApp.UI import MenuItem
+			newMenuItem = MenuItem(self.name, action=self.showWindow_, target=self)
+		else:
+			newMenuItem = NSMenuItem.new()
+			newMenuItem.setTitle_(self.name)
+			newMenuItem.setAction_(self.showWindow_)
+			newMenuItem.setTarget_(self)
 		Glyphs.menu[WINDOW_MENU].append(newMenuItem)
 
 	def showWindow_(self, sender):
