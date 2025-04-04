@@ -2,15 +2,45 @@ Welcome to Glyphs.app’s plug-in documentation! This document covers only some 
 
 ## File Format Plug-in
 
-At the moment, this plug-in provides font export functionality through the Export dialog.
-Planned for the future are Save and Open functionalities.
+### Opening and Saving
+When you like to support regular "Open File" or "Save" operations, define the `CFBundleDocumentTypes` in your Info.plist
 
-This sample plug-in is functional and exports glyph names, unicodes and glyph width into a simple CSV file.
-It makes use of a GUI through Xcode. See the description one level up (https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates) on how to use it.
+```
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>ExportIcon</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.myCompany.ExportIcon</string>
+			</array>
+			<key>LSTypeIsPackage</key>
+			<false/>
+		</dict>
+	</array>
+```
+
+CFBundleTypeRole can have the following values:
+`Editor` (the plugin can read and write this file type)
+`Viewer` (the plugin can only read this file type)
+`Writer` (the plugin can only write this file type, most likely better use the export dialog)
+
+
+### Exporting
+
+There is one template that makes use of a GUI through Xcode and one that uses vanilla. 
+
+### Usage
+See the description one level up (https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates) on how to use it.
 
 ![](../_Readme_Images/exportdialog.png)
 
-# User code
+### User code
 
 A functional plug-in can be as small as this (in `Contents/Resources/plugin.py`):
 
@@ -25,9 +55,17 @@ class ____PluginClassName____(FileFormatPlugin):
 	
 	@objc.python_method
 	def settings(self):
-		self.name = 'My CSV Export'
+		self.name = 'My file format'
 		self.icon = 'ExportIcon'
 		self.loadNib('IBdialog')
+
+	@objc.python_method
+	self.read(self, path, filetype):
+		font = GSFont()
+		# read data, add glyphs …
+
+		# in case of failure, raise an exception and a meaningful explanation
+		return font
 
 	@objc.python_method
 	def export(self, font):
@@ -74,6 +112,10 @@ You put all your initialization code here.
 
 		# Your init code goes here...
 ```
+
+#### read()
+
+this is called when the file is opened (by File > Open or when dragging the file on the App icon.) Return a `GSFont` object. Raise an exception with a meaningful explanation in case of a failure.
 
 #### export()
 

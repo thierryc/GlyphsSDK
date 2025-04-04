@@ -90,6 +90,12 @@ class ____PluginClassName____(FileFormatPlugin):
 			string.append('Glyph Width')
 		self.w.group.FeedbackLabel.set(', '.join(string) if len(string) else 'Nothing')
 
+	# read the file/data at path and return a GSFont object.
+	# filetype is a UIT like `org.unifiedfontobject.ufo`
+	@objc.python_method
+	self.read(self, path, filetype):
+		return None
+
 	@objc.python_method
 	def export(self, font):
 		# Ask for export destination and write the file:
