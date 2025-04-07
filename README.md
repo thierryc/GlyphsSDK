@@ -28,9 +28,10 @@ These plugins add extra View functionality. They usually draw additional items i
 
 These plugins add a new tool in the toolbar. You can place a small PDF as toolbar icon in the `Contents/Resources/` folder. For measurements, take a look at the placeholder image that is already there.
 
-## File Format Description
+## Glyphs File Format
 
-The file `GlyphsFileFormat.md` contains a description of the Glyphs 1.x file format.
+The Glyphs File Format is described in the `GlyphsFileFormat` folder including validation tools, example files, and specifications.
+There are seperate specifications for the format used by [Glyphs 3](https://github.com/schriftgestalt/GlyphsSDK/blob/Glyphs3/GlyphsFileFormat/GlyphsFileFormatv3.md) and [Glyphs 1 and Glyphs 2](https://github.com/schriftgestalt/GlyphsSDK/blob/Glyphs3/GlyphsFileFormat/GlyphsFileFormatv2.md).
 
 ### License
 
