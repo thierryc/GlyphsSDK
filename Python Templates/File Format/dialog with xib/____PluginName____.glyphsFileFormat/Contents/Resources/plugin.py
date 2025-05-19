@@ -42,8 +42,12 @@ class ____PluginClassName____(FileFormatPlugin):
 
 	@objc.python_method
 	def settings(self):
-		self.name = Glyphs.localize({'en': u'My CSV Export', 'de': u'Mein CSV-Export'})
-		self.icon = 'ExportIcon'
+		self.name = Glyphs.localize({
+			'en': 'My CSV Export',
+			'de': 'Mein CSV-Export'
+		})
+		self.icon = 'IconTemplate'
+
 		self.toolbarPosition = 100
 
 		# Load .nib dialog (with .extension)

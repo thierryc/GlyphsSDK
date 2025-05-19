@@ -13,9 +13,10 @@
 
 from __future__ import division, print_function, unicode_literals
 import objc
+import os
 from GlyphsApp import Glyphs, GSAnchor, subtractPoints
 from GlyphsApp.plugins import SelectTool
-from AppKit import NSColor, NSBezierPath, NSPoint
+from AppKit import NSImage, NSColor, NSBezierPath, NSPoint
 
 
 class ____PluginClassName____(SelectTool):
@@ -35,6 +36,10 @@ class ____PluginClassName____(SelectTool):
 				'action': self.printInfo_
 			},
 		]
+		icon_path = os.path.join(os.path.dirname(self.__file__()), "toolbarIconTemplate.pdf")
+		my_image = NSImage.alloc().initByReferencingFile_(icon_path)
+		self._icon = None  # needs to be set to None for now. Is fixed in 3.4 (3416)
+		self.tool_bar_image = my_image
 		self.keyboardShortcut = 'c'
 
 	@objc.python_method
