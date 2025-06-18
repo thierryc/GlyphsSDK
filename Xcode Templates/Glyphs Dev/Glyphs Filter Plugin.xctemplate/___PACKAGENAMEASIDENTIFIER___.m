@@ -66,7 +66,7 @@
 }
 
 - (void)processLayer:(GSLayer *)layer withFirstValue:(CGFloat)firstValue {
-	// this is a menthod specially for your filter. Add/remove arguments as you need
+	// this is a method specially for your filter. Add/remove arguments as you need
 	
 	// do stuff with the Layer.
 
