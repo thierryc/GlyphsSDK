@@ -60,8 +60,8 @@ The following Backus–Naur form describes the syntax of the Glyphs file format.
 <array-elements> ::= <value> [ <ws> ',' ]
                    | <value> <ws> ',' <ws> <array-elements>;
 <string>         ::= <string-quoted> | <string-bare>;
-<string-quoted>  ::= '"' ( '\' <escape-sequece> | <quoted-char> )* '"';
-<escape-sequece> ::= '\' | 'a' | 'b' | 'e' | 'f' | 'n' | 'r' | 't' | 'v' | '\n'
+<string-quoted>  ::= '"' ( '\' <escaped-char> | <quoted-char> )* '"';
+<escaped-char>   ::= '\' | 'a' | 'b' | 'e' | 'f' | 'n' | 'r' | 't' | 'v' | '\n'
                    | <base8> [ <base8> [ <base8> ] ]
                    | 'U' <base16> <base16> <base16> <base16>;
 <base8>          ::= '0'-'7';
