@@ -190,8 +190,8 @@ Use the following JSON schemas to validate files.
     - Option. `integer` (`u8`) – The index of the color label. See also [the handbook entry on color labels](https://handbook.glyphsapp.com/glyph/#glyph/color-label).
     - Option. See [`color`](#spec-glyphs-3-color).
 - <a name="spec-glyphs-3-component"></a><code><strong>component</strong>: object</code> – (`GSComponent`)
-    - <code><strong>alignment</strong>: integer = 0</code> (`i8`) – (`GSComponentAlignment`) – Controls the automatic alignment of the component.
-        - Possible values: `-2`, `-1`, `0`, `1`, `2`, `3`.
+    - <code><strong>alignment</strong>: integer = 0</code> (`i8`) – (`GSComponentAlignment`) – Controls the automatic alignment of the component. `-1`: disabled (no alignment), `0`: default (alignment is based on context), `1`: force alignment (align regardless of context), `3`: horizontal alignment (align horizontally, but allow for manual vertical placement).
+        - Possible values: `-1`, `0`, `1`, `3`.
     - <code><strong>anchor</strong>: string</code> – The name of the attachment anchor. Set to specify a specific anchor when there are multiple candidates.
     - <code><strong>angle</strong>: number = 0</code> (`f64`) <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The rotation angle of the component in degrees clockwise.
     - <code><strong>attr</strong>: object = {}</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The attributes of the component. See [`attrShape`](#spec-glyphs-3-attrShape).
@@ -493,6 +493,10 @@ Use the following JSON schemas to validate files.
 - <a name="spec-glyphs-3-userData"></a><code><strong>userData</strong>: object</code>
 
 ## Changes
+
+### 10. July 2025
+
+- Add descriptions to `GSComponentAlignment`.
 
 ### 14. Jan. 2025
 

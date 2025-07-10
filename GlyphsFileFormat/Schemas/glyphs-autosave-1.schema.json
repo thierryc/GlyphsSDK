@@ -287,17 +287,15 @@
 			"properties": {
 				"alignment": {
 					"enum": [
-						-2,
 						-1,
 						0,
 						1,
-						2,
 						3
 					],
 					"type": "integer",
 					"glyphsNumber": "i8",
 					"default": 0,
-					"description": "Controls the automatic alignment of the component.",
+					"description": "Controls the automatic alignment of the component. `-1`: disabled (no alignment), `0`: default (alignment is based on context), `1`: force alignment (align regardless of context), `3`: horizontal alignment (align horizontally, but allow for manual vertical placement).",
 					"glyphsLabel": {
 						"key": "component.alignment",
 						"default": "Alignment"
