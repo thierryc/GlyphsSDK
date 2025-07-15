@@ -273,7 +273,7 @@ Use the following JSON schemas to validate files.
     - <code><strong>type</strong>: string</code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The type of the hint.
         - Possible values: `"TopGhost"`, `"BottomGhost"`, `"Stem"`, `"Flex"`, `"TTStem"`, `"Align"`, `"Anchor"`, `"Interpolate"`, `"Diagonal"`, `"Delta"`, `"Tag"`, `"Corner"`, `"Cap"`, `"Brush"`, `"Segment"`, `"Auto"`, `"Unknown"`.
 - <a name="spec-glyphs-1-image"></a><code><strong>image</strong>: object</code> – (`GSImage`)
-    - <code><strong>alpha</strong>: number = 100</code> (`f64`) – The alpha value of the image.
+    - <code><strong>alpha</strong>: number = 50</code> (`f64`) – The alpha value of the image.
     - <code><strong>crop</strong>: string</code> – The cropped frame of the image, specified as the crop origin X/Y and size width/height. Examples: `"{{0, 0}, {100, 100}}"`, `"{{-10, -10}, {90, 90}}"`.
     - <code><strong>imagePath</strong>: string</code> – The file path of the image file relative to the document file.
     - <code><strong>imageURL</strong>: string</code> – The URL bookmark data of the image file path.

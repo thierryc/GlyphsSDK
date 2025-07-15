@@ -328,7 +328,7 @@ Use the following JSON schemas to validate files.
     - <code><strong>type</strong>: string</code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The type of the hint.
         - Possible values: `"TopGhost"`, `"BottomGhost"`, `"Stem"`, `"Flex"`, `"TTStem"`, `"TTShift"`, `"TTSnap"`, `"TTInterpolate"`, `"TTDiagonal"`, `"TTDelta"`, `"Tag"`, `"Corner"`, `"Cap"`, `"Brush"`, `"Segment"`, `"Auto"`, `"Unknown"`.
 - <a name="spec-glyphs-3-image"></a><code><strong>image</strong>: object</code> – (`GSImage`)
-    - <code><strong>alpha</strong>: number = 100</code> (`f64`) – The alpha value of the image.
+    - <code><strong>alpha</strong>: number = 50</code> (`f64`) – The alpha value of the image.
     - <code><strong>angle</strong>: number = 0</code> (`f64`) <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The rotation angle of the image in degrees clockwise.
     - <code><strong>crop</strong>: array</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The cropped frame of the image, specified as the crop origin X/Y and size width/height.
  Tuple with 4 items.

@@ -1744,7 +1744,7 @@
 					"glyphsNumber": "f64",
 					"minimum": 0,
 					"maximum": 100,
-					"default": 100,
+					"default": 50,
 					"description": "The alpha value of the image.",
 					"glyphsLabel": {
 						"key": "image.alpha",
