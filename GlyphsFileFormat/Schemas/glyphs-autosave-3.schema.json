@@ -465,6 +465,7 @@
 					"type": "number",
 					"glyphsNumber": "f64",
 					"default": 0,
+					"description": "Unused.",
 					"glyphsLabel": {
 						"key": "component.keep-weight",
 						"default": "Keep Weight"
@@ -823,7 +824,7 @@
 					"type": "integer",
 					"glyphsNumber": "bool",
 					"default": true,
-					"description": "Whether the master is active.",
+					"description": "Unused.",
 					"glyphsLabel": {
 						"key": "any.active",
 						"default": "Active"
@@ -875,7 +876,7 @@
 				"iconName": {
 					"type": "string",
 					"default": "Regular",
-					"description": "The name of the icon that represents the master. Generally omitted when equal to `Regular`, or equal to the default icon name of the master (`GSFontMaster.defaultIconName`).",
+					"description": "The name of the icon that represents the master. Generally omitted when equal to `Regular`, or equal to the default icon name of the master (`GSFontMaster.defaultIconName`). For a list of available names, consult `GSFontMaster.iconNames()`.",
 					"glyphsLabel": {
 						"key": "master.icon-name",
 						"default": "Icon Name"
@@ -892,28 +893,7 @@
 				"metricValues": {
 					"type": "array",
 					"items": {
-						"type": "object",
-						"properties": {
-							"over": {
-								"type": "number",
-								"glyphsNumber": "f64",
-								"description": "The overshoot of the metric value.",
-								"glyphsLabel": {
-									"key": "master.metric-value.overshoot",
-									"default": "Overshoot"
-								}
-							},
-							"pos": {
-								"type": "number",
-								"glyphsNumber": "f64",
-								"description": "The offset from the baseline of the metric value.",
-								"glyphsLabel": {
-									"key": "master.metric-value.offset",
-									"default": "Offset"
-								}
-							}
-						},
-						"additionalProperties": false
+						"$ref": "#/$defs/metricStore"
 					},
 					"default": [],
 					"description": "The metric values of the master.",
@@ -2075,6 +2055,7 @@
 						"icon"
 					],
 					"type": "string",
+					"default": "single",
 					"glyphsCondition": {
 						"minVersion": 3
 					},
@@ -2617,7 +2598,6 @@
 				"width": {
 					"type": "number",
 					"glyphsNumber": "f64",
-					"default": 0,
 					"description": "The width of the layer.",
 					"glyphsLabel": {
 						"key": "any.width",
@@ -2689,6 +2669,33 @@
 			},
 			"additionalProperties": false,
 			"glyphsType": "GSMetric"
+		},
+		"metricStore": {
+			"type": "object",
+			"properties": {
+				"over": {
+					"type": "number",
+					"glyphsNumber": "f64",
+					"default": 0,
+					"description": "The overshoot of the metric value.",
+					"glyphsLabel": {
+						"key": "metric-store.overshoot",
+						"default": "Overshoot"
+					}
+				},
+				"pos": {
+					"type": "number",
+					"glyphsNumber": "f64",
+					"default": 0,
+					"description": "The offset from the baseline of the metric value.",
+					"glyphsLabel": {
+						"key": "metric-store.offset",
+						"default": "Offset"
+					}
+				}
+			},
+			"additionalProperties": false,
+			"glyphsType": "GSMetricStore"
 		},
 		"node": {
 			"type": "array",

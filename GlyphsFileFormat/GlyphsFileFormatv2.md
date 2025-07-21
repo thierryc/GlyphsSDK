@@ -146,7 +146,7 @@ Use the following JSON schemas to validate files.
     - <code><strong>alignment</strong>: integer = 0</code> (`i8`) – (`GSComponentAlignment`) – Controls the automatic alignment of the component. `-1`: disabled (no alignment), `0`: default (alignment is based on context), `1`: force alignment (align regardless of context), `3`: horizontal alignment (align horizontally, but allow for manual vertical placement).
         - Possible values: `-1`, `0`, `1`, `3`.
     - <code><strong>anchor</strong>: string</code> – The name of the attachment anchor. Set to specify a specific anchor when there are multiple candidates.
-    - <code><strong>keepWeight</strong>: number = 0</code> (`f64`)
+    - <code><strong>keepWeight</strong>: number = 0</code> (`f64`) – Unused.
     - <code><strong>locked</strong> = false</code> – Whether the component is locked.
         - Possible values: `0`, `"0"`, `1`, `"1"`.
     - <code><strong>name</strong>: string</code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The name of the component. See `ref` for current format versions.
@@ -178,7 +178,7 @@ Use the following JSON schemas to validate files.
     - <code><strong>name</strong>: string</code> – The four-letter tag of the feature. Example: `"calt"`.
     - <code><strong>notes</strong>: string = ""</code> – A string serving as a description or comment about the feature.
 - <a name="spec-glyphs-1-fontMaster"></a><code><strong>fontMaster</strong>: object</code> – (`GSFontMaster`)
-    - <code><strong>active</strong> = true</code> – Whether the master is active.
+    - <code><strong>active</strong> = true</code> – Unused.
         - Possible values: `0`, `"0"`, `1`, `"1"`.
     - <code><strong>alignmentZones</strong>: array = []</code> – The alignment zones of the master.
         - <code><strong>#</strong>: string</code> Examples: `"{0, -10}"`, `"{700, 16}"`.
@@ -196,7 +196,7 @@ Use the following JSON schemas to validate files.
  See [`guide`](#spec-glyphs-1-guide) for items.
     - <code><strong>horizontalStems</strong>: array = []</code> – The horizontal stems of the master.
         - <code><strong>#</strong>: number</code> (`f64`)
-    - <code><strong>iconName</strong>: string = "Regular"</code> – The name of the icon that represents the master. Generally omitted when equal to `Regular`, or equal to the default icon name of the master (`GSFontMaster.defaultIconName`).
+    - <code><strong>iconName</strong>: string = "Regular"</code> – The name of the icon that represents the master. Generally omitted when equal to `Regular`, or equal to the default icon name of the master (`GSFontMaster.defaultIconName`). For a list of available names, consult `GSFontMaster.iconNames()`.
     - <code><strong>id</strong>: string</code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The unique identifier of the master.
     - <code><strong>italicAngle</strong>: number = 0</code> (`f64`) – The italic angle of the master in degrees clockwise.
     - <code><strong>name</strong>: string</code> – The name of the master. May be omitted in file format version 1 when equal to `Regular` or the default master name.
@@ -353,7 +353,7 @@ Use the following JSON schemas to validate files.
     - <code><strong>userData</strong>: object = {}</code> – Custom data associated with the layer. See [`userData`](#spec-glyphs-1-userData).
     - <code><strong>visible</strong> = false</code> – Whether the layer is visible.
         - Possible values: `0`, `"0"`, `1`, `"1"`.
-    - <code><strong>width</strong>: number = 0</code> (`f64`) <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The width of the layer.
+    - <code><strong>width</strong>: number</code> (`f64`) <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The width of the layer.
 - <a name="spec-glyphs-1-legacyPosition"></a><code><strong>legacyPosition</strong>: string</code> Examples: `"{0, 50}"`, `"{-30.5, 600}"`.
 - <a name="spec-glyphs-1-metric"></a><code><strong>metric</strong>: object</code> – (`GSMetric`)
     - <code><strong>filter</strong>: string</code> – The filter of the metric limiting the scope of the metric to a subset of glyphs.
@@ -362,6 +362,9 @@ Use the following JSON schemas to validate files.
     - <code><strong>name</strong>: string</code> – The name of the metric.
     - <code><strong>type</strong>: string</code> – The type of the metric.
         - Possible values: `"ascender"`, `"cap height"`, `"slant height"`, `"x-height"`, `"midHeight"`, `"topHeight"`, `"bodyHeight"`, `"descender"`, `"baseline"`, `"italic angle"`, `"italic slope"`.
+- <a name="spec-glyphs-1-metricStore"></a><code><strong>metricStore</strong>: object</code> – (`GSMetricStore`)
+    - <code><strong>over</strong>: number = 0</code> (`f64`) – The overshoot of the metric value.
+    - <code><strong>pos</strong>: number = 0</code> (`f64`) – The offset from the baseline of the metric value.
 - <a name="spec-glyphs-1-node"></a><code><strong>node</strong>: string</code> – (`GSNode`) Examples: `"0 0 MOVE"`, `"-50 100 LINE"`, `"100 100 CURVE SMOOTH"`, `"200 -60 OFFCURVE"`.
 - <a name="spec-glyphs-1-infoProperty"></a><code><strong>infoProperty</strong></code> – (`GSInfoProperty`) One of 2 options.
     - Option. `object`

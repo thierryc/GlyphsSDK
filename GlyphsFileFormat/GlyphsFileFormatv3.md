@@ -195,7 +195,7 @@ Use the following JSON schemas to validate files.
     - <code><strong>anchor</strong>: string</code> – The name of the attachment anchor. Set to specify a specific anchor when there are multiple candidates.
     - <code><strong>angle</strong>: number = 0</code> (`f64`) <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The rotation angle of the component in degrees clockwise.
     - <code><strong>attr</strong>: object = {}</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The attributes of the component. See [`attrShape`](#spec-glyphs-3-attrShape).
-    - <code><strong>keepWeight</strong>: number = 0</code> (`f64`)
+    - <code><strong>keepWeight</strong>: number = 0</code> (`f64`) – Unused.
     - <code><strong>locked</strong>: boolean = false</code> – Whether the component is locked.
     - <code><strong>masterId</strong>: string</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The ID of the master from which the component is derived.
     - <code><strong>orientation</strong>: integer = 0</code> (`i8`) <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – (`GSElementOrientation`) – The orientation of the component.
@@ -228,19 +228,17 @@ Use the following JSON schemas to validate files.
     - <code><strong>notes</strong>: string = ""</code> – A string serving as a description or comment about the feature.
     - <code><strong>tag</strong>: string</code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The four-letter tag of the feature. Example: `"calt"`.
 - <a name="spec-glyphs-3-fontMaster"></a><code><strong>fontMaster</strong>: object</code> – (`GSFontMaster`)
-    - <code><strong>active</strong>: boolean = true</code> – Whether the master is active.
+    - <code><strong>active</strong>: boolean = true</code> – Unused.
     - <code><strong>axesValues</strong>: array = []</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The designspace location of the master.
         - <code><strong>#</strong>: number</code> (`f64`)
     - <code><strong>customParameters</strong>: array = []</code> – The custom parameters of the master.
  See [`customParameter`](#spec-glyphs-3-customParameter) for items.
     - <code><strong>guides</strong>: array = []</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The global guides of the master.
  See [`guide`](#spec-glyphs-3-guide) for items.
-    - <code><strong>iconName</strong>: string = "Regular"</code> – The name of the icon that represents the master. Generally omitted when equal to `Regular`, or equal to the default icon name of the master (`GSFontMaster.defaultIconName`).
+    - <code><strong>iconName</strong>: string = "Regular"</code> – The name of the icon that represents the master. Generally omitted when equal to `Regular`, or equal to the default icon name of the master (`GSFontMaster.defaultIconName`). For a list of available names, consult `GSFontMaster.iconNames()`.
     - <code><strong>id</strong>: string</code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The unique identifier of the master.
     - <code><strong>metricValues</strong>: array = []</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The metric values of the master.
-        - <code><strong>#</strong>: object</code>
-            - <code><strong>over</strong>: number</code> (`f64`) – The overshoot of the metric value.
-            - <code><strong>pos</strong>: number</code> (`f64`) – The offset from the baseline of the metric value.
+ See [`metricStore`](#spec-glyphs-3-metricStore) for items.
     - <code><strong>name</strong>: string</code> – The name of the master. May be omitted in file format version 1 when equal to `Regular` or the default master name.
     - <code><strong>numberValues</strong>: array = []</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The number values of the master.
         - <code><strong>#</strong>: number</code> (`f64`)
@@ -362,7 +360,7 @@ Use the following JSON schemas to validate files.
     - <code><strong>name</strong>: string</code> – The style name of the instance. Examples: `"Regular"`, `"Bold"`, `"Italic"`, `"Bold Italic"`.
     - <code><strong>properties</strong>: array = []</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center">
  See [`infoProperty`](#spec-glyphs-3-infoProperty) for items.
-    - <code><strong>type</strong>: string</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The type of the instance.
+    - <code><strong>type</strong>: string = "single"</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The type of the instance.
         - Possible values: `"single"`, `"variable"`, `"icon"`.
     - <code><strong>userData</strong>: object = {}</code> – Custom data associated with the instance. See [`userData`](#spec-glyphs-3-userData).
     - <code><strong>visible</strong>: boolean = true</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – Whether the instance is visible when previewing all instances.
@@ -433,13 +431,16 @@ Use the following JSON schemas to validate files.
     - <code><strong>vertOrigin</strong>: number = 0</code> (`f64`) <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The vertical origin of the layer.
     - <code><strong>vertWidth</strong>: number = 0</code> (`f64`) <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The vertical width of the layer.
     - <code><strong>visible</strong>: boolean = false</code> – Whether the layer is visible.
-    - <code><strong>width</strong>: number = 0</code> (`f64`) <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The width of the layer.
+    - <code><strong>width</strong>: number</code> (`f64`) <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The width of the layer.
 - <a name="spec-glyphs-3-metric"></a><code><strong>metric</strong>: object</code> – (`GSMetric`)
     - <code><strong>filter</strong>: string</code> – The filter of the metric limiting the scope of the metric to a subset of glyphs.
     - <code><strong>horizontal</strong>: boolean = false</code> – Whether the metric is a horizontal metric.
     - <code><strong>name</strong>: string</code> – The name of the metric.
     - <code><strong>type</strong>: string</code> – The type of the metric.
         - Possible values: `"ascender"`, `"cap height"`, `"slant height"`, `"x-height"`, `"midHeight"`, `"topHeight"`, `"bodyHeight"`, `"descender"`, `"baseline"`, `"italic angle"`, `"italic slope"`.
+- <a name="spec-glyphs-3-metricStore"></a><code><strong>metricStore</strong>: object</code> – (`GSMetricStore`)
+    - <code><strong>over</strong>: number = 0</code> (`f64`) – The overshoot of the metric value.
+    - <code><strong>pos</strong>: number = 0</code> (`f64`) – The offset from the baseline of the metric value.
 - <a name="spec-glyphs-3-node"></a><code><strong>node</strong>: array</code> – (`GSNode`)
  Tuple with 3–4 items.
     - <code><strong>#0</strong>: number</code> (`f64`) – The x-coordinate of the node.
