@@ -1,5 +1,5 @@
 {
-.appVersion = "3180";
+.appVersion = "3424";
 .formatVersion = 3;
 axes = (
 {
@@ -93,18 +93,18 @@ value = "600";
 );
 guides = (
 {
-orientation = right;
 angle = 24.582;
 lockAngle = 1;
 locked = 1;
 name = "guide name";
+orientation = right;
 pos = (-25,193);
 showMeasurement = 1;
 },
 {
-orientation = right;
 angle = 90;
 filter = "category == \"Letter\"";
+orientation = right;
 pos = (-34,271);
 }
 );
@@ -242,6 +242,10 @@ isItalic = 1;
 name = Regular;
 properties = (
 {
+key = designerURL;
+value = www.designer.com;
+},
+{
 key = familyNames;
 values = (
 {
@@ -253,10 +257,6 @@ language = DEU;
 value = "Instance Familienname";
 }
 );
-},
-{
-key = designerURL;
-value = www.designer.com;
 }
 );
 userData = {
@@ -360,6 +360,15 @@ name = "Some Number";
 );
 properties = (
 {
+key = compatibleFullNames;
+values = (
+{
+language = dflt;
+value = "Compatible Full Name 1";
+}
+);
+},
+{
 key = copyrights;
 values = (
 {
@@ -369,15 +378,6 @@ value = "Default Copyright1";
 {
 language = DEU;
 value = "Deutsches Copyright";
-}
-);
-},
-{
-key = compatibleFullNames;
-values = (
-{
-language = dflt;
-value = "Compatible Full Name 1";
 }
 );
 },
