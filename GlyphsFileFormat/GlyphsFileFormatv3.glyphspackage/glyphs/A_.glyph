@@ -42,8 +42,8 @@ name = "guide name";
 pos = (186,310);
 },
 {
-orientation = right;
 angle = 90;
+orientation = right;
 pos = (-74,271);
 }
 );
