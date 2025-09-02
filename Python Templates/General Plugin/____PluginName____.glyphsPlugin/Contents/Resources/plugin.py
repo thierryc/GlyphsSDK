@@ -32,10 +32,8 @@ class ____PluginClassName____(GeneralPlugin):
 
 	@objc.python_method
 	def start(self):
-		if Glyphs.versionNumber >= 3.3:
-			newMenuItem = NSMenuItem(self.name, callback=self.showWindow_, target=self)
-		else:
-			newMenuItem = NSMenuItem(self.name, self.showWindow_)
+		newMenuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(self.name, self.showWindow_, "")
+		newMenuItem.setTarget_(self)
 		Glyphs.menu[EDIT_MENU].append(newMenuItem)
 
 	def showWindow_(self, sender):

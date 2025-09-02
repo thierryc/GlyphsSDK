@@ -1255,10 +1255,11 @@ GSApplication.menu = property(lambda self: AppMenuProxy(self))
 		:const:`APP_MENU`, :const:`FILE_MENU`, :const:`EDIT_MENU`, :const:`GLYPH_MENU`, :const:`PATH_MENU`, :const:`FILTER_MENU`, :const:`VIEW_MENU`, :const:`SCRIPT_MENU`, :const:`WINDOW_MENU`, :const:`HELP_MENU`
 
 		.. code-block:: python
-			def doStuff(sender):
+			def doStuff_(self, sender):
 			    # do stuff
-
-			newMenuItem = NSMenuItem('My menu title', doStuff)
+			
+			newMenuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(self.name, self.doStuff_, "")
+			newMenuItem.setTarget_(self)
 			Glyphs.menu[EDIT_MENU].append(newMenuItem)
 '''
 
@@ -13883,7 +13884,7 @@ NSMenu.insert = python_method(__NSMenu__insert__)
 
 The NSMenuItem object.
 
-.. class:: NSMenuItem([title, callback=None, target=None, keyboard=None, modifier=0])
+.. class:: NSMenuItem
 
 	:param title: The title of the item.
 	:param callback: a method/selector that is called when the menu item is clicked.

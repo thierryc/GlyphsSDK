@@ -279,9 +279,9 @@ class GlyphsAppTests(unittest.TestCase):
 		def a():
 			print('hello')
 
-		newMenuItem = NSMenuItem('B', a)
-		Glyphs.menu[EDIT_MENU].append(newMenuItem)
-		self.assertIsNotNone(Glyphs.menu[0])
+		# newMenuItem = NSMenuItem('B', a)
+		# Glyphs.menu[EDIT_MENU].append(newMenuItem)
+		# self.assertIsNotNone(Glyphs.menu[0])
 		with self.assertRaises(TypeError):
 			Glyphs.menu[1.5]
 		self.assertList(copy.copy(Glyphs.menu))
