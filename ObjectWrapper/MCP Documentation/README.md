@@ -4,8 +4,18 @@ This directory contains tools for building HTML documentation for the MCP server
 
 ## Requirements
 
-- [Sphinx](https://www.sphinx-doc.org/)
 - Python 3.8+
+- [Sphinx](https://www.sphinx-doc.org/) (see `requirements.txt`)
+
+## Setup
+
+Create a virtual environment and install dependencies:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install -r requirements.txt
+```
 
 ## Usage
 
