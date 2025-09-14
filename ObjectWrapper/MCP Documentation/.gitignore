@@ -2,6 +2,6 @@
 .venv/
 venv/
 
-# Generated documentation
-sphinx/
+# Build artifacts
+sphinx/_build/
 

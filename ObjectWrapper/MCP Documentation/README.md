@@ -27,12 +27,14 @@ Extract documentation and build the Sphinx source directory:
 python mcp_doc_generator.py
 ```
 
-The script creates a ``sphinx/`` directory containing ``index.rst``. To build
-HTML from this source, run:
+The first documentation block becomes a summary in ``sphinx/index.rst``.
+Each subsequent block is written to its own ``section_*.rst`` file and
+referenced from a ``toctree`` in the index. Only the ``sphinx/`` folder is
+needed for the MCP server. To build HTML from this source, run:
 
 ```bash
 python -m sphinx -b html sphinx sphinx/_build/html
 ```
 
-The generated files in ``sphinx/`` and ``sphinx/_build/html`` are ignored by
-git.
+Only ``sphinx/_build`` is ignored by git so the source ``.rst`` files remain
+available for documentation retrieval.
