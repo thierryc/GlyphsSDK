@@ -1,39 +1,28 @@
 #!/usr/bin/env python3
-"""
-Generate documentation for the MCP server using Sphinx.
+"""Generate reStructuredText documentation for the MCP server.
 
-This script mirrors the functionality of the original
-`code2sphinx.py` but uses modern Python features for clarity
-and reliability.
+This script draws inspiration from ``code2sphinx.py`` but focuses on
+producing `.rst` files using ``sphinx.ext.apidoc`` so the output can be
+consumed directly or further processed into other formats.
 """
 
 from __future__ import annotations
 
-import subprocess
-import sys
 from pathlib import Path
 
+from sphinx.ext.apidoc import main as apidoc_main
 
-def build_docs() -> None:
-    """Build HTML documentation using Sphinx."""
+
+def generate_rst() -> None:
+    """Create ``.rst`` files for the MCP server API."""
     root = Path(__file__).resolve().parent
-    source_dir = root / "sphinx"
-    build_dir = root / "_build" / "html"
-    build_dir.mkdir(parents=True, exist_ok=True)
+    output_dir = root / "rst"
+    package_dir = root.parent / "GlyphsApp"
+    output_dir.mkdir(parents=True, exist_ok=True)
 
-    cmd = [
-        sys.executable,
-        "-m",
-        "sphinx",
-        "-b",
-        "html",
-        str(source_dir),
-        str(build_dir),
-    ]
-    subprocess.run(cmd, check=True)
-
-    print(f"Documentation built at {build_dir}")
+    apidoc_main(["-o", str(output_dir), str(package_dir)])
+    print(f"reStructuredText documentation written to {output_dir}")
 
 
 if __name__ == "__main__":
-    build_docs()
+    generate_rst()
