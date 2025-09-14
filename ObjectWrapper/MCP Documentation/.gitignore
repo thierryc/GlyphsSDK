@@ -1,0 +1,7 @@
+# Virtual environments
+.venv/
+venv/
+
+# Build artifacts
+sphinx/_build/
+
