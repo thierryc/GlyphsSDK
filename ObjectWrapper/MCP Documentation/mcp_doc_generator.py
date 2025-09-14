@@ -1,27 +1,36 @@
 #!/usr/bin/env python3
-"""Generate reStructuredText documentation for the MCP server.
+"""Generate Sphinx-ready reStructuredText for the MCP server.
 
-This script draws inspiration from ``code2sphinx.py`` but focuses on
-producing `.rst` files using ``sphinx.ext.apidoc`` so the output can be
-consumed directly or further processed into other formats.
+This script extracts triple-quoted documentation blocks from
+``GlyphsApp/__init__.py`` and prepends a header template so the
+resulting file can be built by Sphinx into HTML or other formats.
 """
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
-from sphinx.ext.apidoc import main as apidoc_main
+
+def extract_sections(init_path: Path) -> str:
+    """Return concatenated documentation sections from ``init_path``."""
+    content = init_path.read_text(encoding="utf-8")
+    parts = re.findall(r"'''(.*?)'''", content, re.DOTALL)
+    return "\n".join(part.strip() for part in parts)
 
 
 def generate_rst() -> None:
-    """Create ``.rst`` files for the MCP server API."""
+    """Write ``index.rst`` based on the header and extracted sections."""
     root = Path(__file__).resolve().parent
-    output_dir = root / "rst"
-    package_dir = root.parent / "GlyphsApp"
-    output_dir.mkdir(parents=True, exist_ok=True)
+    header = (root / "header.rst.txt").read_text(encoding="utf-8")
+    init_file = root.parent / "GlyphsApp" / "__init__.py"
+    doc = extract_sections(init_file)
 
-    apidoc_main(["-o", str(output_dir), str(package_dir)])
-    print(f"reStructuredText documentation written to {output_dir}")
+    source_dir = root / "sphinx"
+    source_dir.mkdir(parents=True, exist_ok=True)
+    index_path = source_dir / "index.rst"
+    index_path.write_text(f"{header}\n{doc}\n", encoding="utf-8")
+    print(f"reStructuredText documentation written to {index_path}")
 
 
 if __name__ == "__main__":

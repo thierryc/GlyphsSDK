@@ -1,6 +1,8 @@
 # MCP Documentation
 
 This directory contains tools for building reStructuredText documentation for the MCP server.
+The generator reads documentation blocks from ``../GlyphsApp/__init__.py``
+and writes a Sphinx source tree.
 
 ## Requirements
 
@@ -19,12 +21,18 @@ python3 -m pip install -r requirements.txt
 
 ## Usage
 
-Generate `.rst` files from the `GlyphsApp` package:
+Extract documentation and build the Sphinx source directory:
 
 ```bash
 python mcp_doc_generator.py
 ```
 
-The resulting reStructuredText files are written to the `rst/` directory. These
-files can be consumed directly by an MCP server or further processed by Sphinx
-into other formats such as HTML or PDF.
+The script creates a ``sphinx/`` directory containing ``index.rst``. To build
+HTML from this source, run:
+
+```bash
+python -m sphinx -b html sphinx sphinx/_build/html
+```
+
+The generated files in ``sphinx/`` and ``sphinx/_build/html`` are ignored by
+git.

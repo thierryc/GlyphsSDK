@@ -1,0 +1,8 @@
+.. highlight:: python
+   :linenothreshold: 500
+
+MCP Server Documentation
+========================
+
+This content is extracted from ``GlyphsApp/__init__.py``.
+

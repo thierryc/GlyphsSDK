@@ -3,5 +3,5 @@
 venv/
 
 # Generated documentation
-rst/
-_build/
+sphinx/
+
